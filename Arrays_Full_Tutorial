@@ -1,0 +1,278 @@
+/* Array : list of elements of the same data type,
+           placed in a continus memory llocation.
+           
+ Creating an Array : datatype name[]= new datatype[size];
+        Ex.
+            int number[] = new int[50];
+            int number[] ={1,2,3,4,5};
+            string fruites[] = {"apple","banana"};
+
+ Note : passing Array as argument(OR pass by reference)           
+           */
+
+
+import java.util.*;
+
+public class Arr{
+
+    public static void linearsearch(int numbers[],int key)
+    {/*Linear search : find the index of element in given array */
+
+        for(int i=0;i<=numbers.length;i++)
+        {
+            if(numbers[i]==key)
+            {
+                System.out.println("key at index : "+ i);
+            }
+            else
+            {
+                System.out.println("key not found !!");
+            }
+        }
+    }
+
+
+    public static int Binarysearch(int numbers[], int key)
+    {
+        int start = 0, end = numbers.length-1;
+
+        while(start <= end)
+        {
+            int mid = (start + end)/2;
+
+            //comparisons
+            if(numbers[mid] == key)
+            {
+                return mid;
+            }
+            if(numbers[mid]< key)//right
+            {
+                start = mid +1;
+            }
+            else
+            {
+                end = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+
+
+    public static int getLargest(int numbers[])
+    {//find the largest element from given array
+
+        int largest = Integer.MIN_VALUE;
+
+        for(int i=0;i<=numbers.length;i++)
+        {
+            if(numbers[i] > largest)
+            {
+                largest = numbers[i];
+            }
+        }
+        return largest ;
+    }
+
+
+
+    public static void Reverse(int numbers[])
+    {//reverse an array
+
+        int first = 0, last = numbers.length-1;
+
+        while(first < last )
+        {
+            int temp = numbers[last];
+            numbers[last] = numbers[first];
+            numbers[first] = temp ;
+            first++;
+            last--;
+        }
+
+        for(int i=0;i<numbers.length;i++)
+        {
+            System.out.print(numbers[i]+",");
+        }
+    }
+
+
+
+    public static void PrintPairs(int number[])
+    {//print the pairs of array
+
+        for(int i=0;i<=number.length;i++)
+        {
+            int curr = number[i];
+            for(int j=i+1;j<number.length;j++)
+            {
+                System.out.print("("+curr+","+number[j]+")");
+            }
+        }System.out.println();
+    }
+
+
+
+    public static void subarr(int numbers[])
+    {//a continous part of array
+        
+        for(int i=0;i<numbers.length;i++)
+        {
+            for(int j=i;j<numbers.length;j++)
+            {
+                for(int k=i;k<=j;k++)
+                {
+                    System.out.println(numbers[k]+" ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+        }
+    }
+
+
+
+    public static void MaxSubArrSum(int number[])
+    {//O(n^3)
+        int currsum = 0;
+        int maxsum = Integer.MIN_VALUE;
+
+        for(int i=0;i<number.length;i++)
+        {
+            for(int j=i;j<number.length;j++)
+            {
+                currsum = 0;
+                for(int k=i;k<=j;k++)
+                {
+                    currsum += number[i];
+                }
+                // System.out.println(currsum);
+                if(maxsum < currsum)
+                {
+                    maxsum = currsum;
+                }
+            }
+        }System.out.println("max sum is :"+ maxsum);
+    }
+
+
+
+
+    public static void maxsubarrsum(int numbers[])
+    {/*in this method we create a new array & store the sum
+        of old array's elements. */
+
+        int currsum = 0;
+        int maxsum =Integer.MIN_VALUE;
+        int prefix[]= new int [numbers.length];
+        prefix[0] = numbers[0];
+
+        //calculate prefix array
+        for(int i=1;i<prefix.length;i++)
+        {
+            prefix[i] = prefix[i-1] +numbers[i];
+        }
+        for(int i=0;i<numbers.length;i++)
+        {
+            for(int j=1;j<numbers.length;j++)
+            {
+                currsum = i == 0 ? prefix[j] :prefix[i-1] - prefix[i-1] ;
+                if(maxsum <currsum){
+                    maxsum = currsum;
+                }
+            }
+        }System.out.println("max sum is : "+maxsum);
+    }
+
+
+
+    public static void kadanes(int numbers[]){
+        int maxsum = Integer.MIN_VALUE;
+        int currsum = 0;
+        for(int i=0;i<numbers.length;i++)
+        {
+            currsum += numbers[i];
+            if(currsum<0)
+            {
+                currsum = 0;
+            }
+            maxsum = Math.max(currsum,maxsum);
+        }
+        System.out.println(maxsum);
+    }
+
+
+
+    /*@ trapping rainwater : given n non-negetive integer representing an elevation map where
+                             the wieth of each bar is 1, calculate how much water is trap after rainig
+                                         
+    @ logic steps : 1. water is trapped if both sides has boundry to block the water,so we can write :
+                       "trapped_water = (heigth of water - heigth of block) * weigth"
+                    2. so we need minimum 2 bars to store the water.
+                    3. so we take to helper arrays to store data of elements left & rigth max heigth
+                       then we take minimum them so we get "heigth of water"  */
+
+    public static int trapped_water(int numbers[])
+    {//O(n)
+        int n = numbers.length;
+
+        //calculate left most boundry : array
+        int leftmax[] = new int[n];
+        leftmax[0] = numbers[0];
+        for(int i=1;i<n;i++)
+        {
+            leftmax[i] = Math.max(numbers[i],leftmax[i-1]);
+        }
+
+        //calculate right max boundry : array
+        int rightmax[] = new int[n];
+        rightmax[n-1] = numbers[n-1];
+        for(int i=n-2;i>=0;i--)
+        {
+            rightmax[i] = Math.max(numbers[i], rightmax[i+1]);
+        }
+
+        int trappedWater = 0;
+        for(int i=0;i<n;i++)
+        {
+            int waterLevel = Math.min(leftmax[i], rightmax[i]);
+            trappedWater += waterLevel - numbers[i];
+        }
+        return trappedWater;
+    }
+
+
+/*@Buy & Sell Stocks : you are given an array prices where price[i] is the price of a given stock on the ith day,
+                       you went to maximise your profit by choosing a single day to buy one stock & choosing a 
+                       different day in the future to sell that stock. return the maximum profit you can achieve 
+                       from this transcation, if you can't achieve any profit return 0.
+
+                       prices = {7,1,5,3,6,4}   */
+ 
+
+    public static int BuyAndSellStocks(int prices[])
+    {
+        int BuyPrice =Integer.MAX_VALUE;
+        int maxProfit = 0;
+
+        for(int i=0;i < prices.length;i++)
+        {
+            if(BuyPrice < prices[i])
+            {
+                int profit = prices[i] - BuyPrice;
+                maxProfit = Math.max(maxProfit,profit);
+            }
+            else
+            {
+                BuyPrice = prices[i];
+            }
+        }return maxProfit;
+    }
+
+
+
+    public static void main(String[] args) {
+    int profit[] = {7,1,5,3,6,4};
+    System.out.println(BuyAndSellStocks(profit));
+    }
+}
