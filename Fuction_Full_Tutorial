@@ -1,0 +1,143 @@
+/* Function : function is a block of code to perform particular task.
+
+   Types of function : 1. Inbuilt function
+                       2. User define function
+
+   Syantax : 1. returntype name()
+                 {// Without perameters
+                    body;
+                    retuen statement;
+                 }
+ 
+              2. returntype name(P1,P2)
+                 {// With paerameters
+                    body;
+                    return statement;
+                 }
+ 
+   Function Overloading :multiple function with same name, but different perameters.
+                         1. different datatype
+                         2. different parameters
+                 */
+
+import java.util.*;
+
+public class Function {
+
+
+//calculate sum by function !
+public static int  CalSum(int Num1, int Num2) //Formal parameters OR perameters
+{
+   return Num1+Num2;
+} 
+
+
+
+//factorial of a number
+public static int Fact(int n)
+{ int fact = 1;
+   for(int i=2;i<=n;i++)
+   {
+      fact *= i;
+   }
+   return fact;
+}
+
+
+
+//calculate binomial coefficient nCr
+public static int BinCoef(int n,int r)
+{ //factorial function already exist !
+   int fact_n = Fact(n);
+   int fact_r = Fact(r);
+   int fact_nmr = Fact(n-r);
+
+   return fact_n / (fact_r * fact_nmr);
+}
+
+
+
+//Number is prime or not !
+public static boolean IsPrime(int Num)
+{
+   if(Num==2)
+   {
+      return true;
+   }
+
+   for(int i=3;i<=(int)Math.sqrt(Num);i++)
+   {
+      if(Num % i ==0)
+      {
+         return false;
+      }
+   }
+   return true;
+}
+
+
+
+//primes in range
+public static void PrimeInRange(int Num)
+{
+   for(int i=2;i<=Num;i++)
+   {
+      if(IsPrime(i))
+      {
+         System.out.print(i +" ");
+      }
+   }
+   System.out.println();
+}
+
+
+
+//Binary to Decimal
+public static void binTodec(int binNum)
+{
+   int pow = 0;
+   int decnum = 0;
+   int mynum = binNum;
+
+   while(binNum > 0)
+   {
+      int lastDigit = binNum % 10;
+      decnum += (lastDigit *(int)Math.pow(2,pow));
+      pow++;
+      binNum /= 10;
+   }
+   System.out.println("decimal of : "+ mynum +" = "+decnum);
+}
+
+
+
+//decimal to binary
+public static void decTobin(int decNum)
+{
+   int pow = 0;
+   int decnum = 0;
+   int mynum =  decNum;
+
+   while(decNum > 0)
+   { 
+      int lastDigit = decNum % 2;
+      decnum += (lastDigit *(int)Math.pow(10,pow));
+      pow++;
+      decNum /= 2;
+   }
+   System.out.println("binNum of : "+ mynum +" = "+decnum);
+}
+
+
+
+
+public static void main (String args[])
+{
+    Scanner s = new Scanner(System.in);
+   //  int a = s.nextInt();
+   //  int b = s.nextInt();
+    System.out.println();// Actual parameters
+    decTobin(15);
+}
+
+}
