@@ -1,0 +1,382 @@
+/* Petterns : in this topic we are going to use nested loops concept
+   
+Note : first, we compare the pattern with matrix to simplefy the problem
+       (to know the logic behind the pattern !)
+
+       */
+
+
+public class Petterns {
+
+/* 1. *
+      **
+      ***
+      ****
+ */
+    public static void star_pattern(int n)
+    {
+        for(int i=1; i<=n;i++)
+        {
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print("*");
+            }
+        }System.out.println();
+    }
+
+
+
+/*  2. ****
+       ***
+       **
+       *
+ */
+    public static void star_pattern2(int n)
+    {
+        for(int i=n;i>0;i--)
+        {
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 3. 1
+      12
+      123
+      1234
+ */
+    public static void number_pattern(int n)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print(j);
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 4. A
+      AB
+      ABC
+      ABCD
+ */
+    public static void Alphabet_pettren(int n)
+    {
+        char ch = 'A';
+        for(int i=1;i<=n;i++)
+        {
+            for(char j=1;j<=i;j++)
+            {
+                System.out.print(ch);
+                ch++;
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 5. * * * * *
+      *       *
+      *       *
+      * * * * *
+ */
+    public static void Hollo_retangle(int Row,int Colom)
+    {
+        for(int i=1;i<=Row ;i++)
+        {
+            for(int j=1;j<=Colom;j++)
+            {
+                if(i==1 || j==1 || i==Row || j==Colom)
+                {
+                    System.out.print("*"+" ");
+                }
+                else{
+                    System.out.print("  ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/*  6.     *
+          **
+         ***
+        ****
+ */
+    public static void half_pyramid(int n) 
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<n-i;j++)
+            {
+                System.out.print(" ");
+            }
+
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/*  floyds triangle
+    7.  1
+        23
+        456
+        78910
+ */
+    public static void floyds_triangle(int n)
+    {
+        int count = 1;
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print(count);
+                count++;
+            }
+        }System.out.println();
+    }
+
+
+
+/*  8. 1
+       01
+       101
+       0101
+       10101
+ */
+    public static void zero_one_triangle(int n)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=i;j++)
+            {
+                if((i+j)%2 == 0)
+                {
+                    System.out.print("1");
+                }
+                else
+                {
+                    System.out.print("0");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 9.Butter fly pattern
+    *      *
+    **    **
+    ***  ***
+    ********
+    ********
+    ***  ***
+    **    **
+    *      *
+*/
+    public static void Bitterfly(int n)
+    {   //upper half pettern
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print("*");
+            }
+            for(int j=1;j<=2*(n-i);j++)
+            {
+                System.out.print(" ");
+            }
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+        //lower half pettern
+        for(int i=n;i>=1;i--)
+        {
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print("*");
+            }
+            for(int j=1;j<=2*(n-i);j++)
+            {
+                System.out.print(" ");
+            }
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 10.Solid rhombus
+         *****
+        *****
+       *****
+      *****
+     *****  
+*/
+    public static void SolidRhombus(int n)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=n-i;j++)
+            {
+                System.out.print(" ");
+            }
+            System.out.println("*****");
+        }
+    }
+
+
+
+/* 11.Hollow Rhombus
+        *****
+       *   *
+      *   *
+     *   *
+    *****
+ */
+    public static void HollowRhombus(int n)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=n-i;j++)
+            {
+                System.out.print(" ");
+            }
+            for(int j=1;j<=n;j++)
+            {
+                if(i==1 || i==n || j==1 || j==n)
+                {
+                    System.out.print("*");
+                }
+                else
+                {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 12.NumberPiramid
+        1 
+       2 2
+      3 3 3
+     4 4 4 4
+ */
+    public static void NumberPiramid(int n)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=n-i;j++)
+            {
+                System.out.print(" ");
+            }
+            for(int j=1;j<=i;j++)
+            {
+                System.out.print(i + " ");
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 13. MirrorPiramid
+            1
+           212
+          32123
+         4321234
+ */
+    public static void MirrorPiramid(int n)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=n-i;j++)
+            {
+                System.out.print(" ");
+            }
+            for(int j=i;j>=1;j--)
+            {
+                System.out.print(j);
+            }
+            for(int j=2;j<=i;j++)
+            {
+                System.out.print(j);
+            }
+            System.out.println();
+        }
+    }
+
+
+
+/* 14. DimandPattern
+         *
+        ***
+       *****
+       *****
+        ***
+         *
+ */
+    public static void DimandPattern(int n)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=n-i;j++)
+            {
+                System.out.print(" ");
+            }
+            for(int j=1;j<=2*i-1;j++)
+            {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+
+        for(int i=n;i>=1;i--)
+        {
+            for(int j=1;j<=n-i;j++)
+            {
+                System.out.print(" ");
+            }
+            for(int j=1;j<=2*i-1;j++)
+            {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+    }
+
+
+
+    public static void main(String args[])
+    {
+        DimandPattern(5);
+    }
+}
