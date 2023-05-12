@@ -1,0 +1,211 @@
+import java.util.*;
+
+import javax.lang.model.util.ElementScanner14;
+
+//Store and print the 3x3 matrix
+class TWO_D_Array{
+
+
+    public static void scanAndPrint() 
+    {
+        Scanner sc = new Scanner(System.in);
+        int matrix[][] = new int [3][3];
+
+         for(int i=0;i<matrix.length;i++)
+         {
+           for(int j=0;j<matrix[0].length;j++)
+          {
+            matrix[i][j] = sc.nextInt() ;
+          }
+         }
+    
+     for(int i=0;i<matrix.length;i++)
+     {
+       for(int j=0;j<matrix[0].length;j++)
+        {
+            System.out.print(matrix[i][j]+" ");
+        }
+        System.out.println();
+     }
+    }
+
+
+
+
+//find the key in the matrix  Binary_search
+public static void SearchKey(int matrix[][],int key)
+{
+    for(int i=0;i<matrix.length;i++)
+    {
+        for(int j=0;j<matrix[0].length;j++)
+        {
+           if(matrix[i][j] == key)
+           {
+            System.out.println("key is found at index ("+i+","+j+")");
+            return ;
+           }
+        }
+    }
+    System.out.println("key not found !!");
+}
+
+
+
+/*spiral matrix :  
+    Approch:go through boarder
+            1st iteration | 2nd iteration | then
+  StartRow |      0       |       1       |  ++
+  EndRow   |    3(n-1)    |       2       |  --
+  StartCol |      0       |       1       |  ++
+  EndCol   |    3(n-1)    |       2       |  --
+
+  so,code look like,
+
+    while(cond)
+    {
+        top....
+        right...
+        bottom...
+        left...
+    }
+*/
+    public static void spiralMatrix(int matrix[][])
+    {
+        int StartRow = 0 , StartCol = 0 ;
+        int EndRow = matrix.length-1;
+        int EndCol = matrix[0].length-1;
+
+        while(StartRow <= EndRow && StartCol <= EndCol)
+        {
+            //top
+            for(int j=StartCol ; j<=EndCol ; j++)
+            {
+                System.out.print( matrix[StartCol][j]+" ");
+            }
+
+            //right
+            for(int i=StartRow+1 ; i<= EndRow ; i++)
+            {
+                System.out.print(matrix[i][EndCol]+" ");
+            }
+
+            //bottom
+            for(int j=EndCol-1 ; j >= StartCol ; j--)
+            {
+                if(StartRow == EndRow)
+                {
+                    break;
+                }
+                System.out.print(matrix[EndRow][j]+" ");
+            }
+
+            //left
+            for(int i= EndRow-1 ; i>= StartRow+1 ;i--)
+            {
+                if(StartCol == EndCol)
+                {
+                    break;
+                }
+                System.out.print(matrix[i][StartCol]+" ");
+            }
+            StartCol++;
+            StartRow++;
+            EndRow--;
+            EndCol--;
+        }
+    } 
+
+
+    
+
+    //diogonal sum of matrix :
+    public static void DiagonalSum(int matrix[][])
+    {
+        int sum = 0 ;
+        for(int i=0;i<matrix.length;i++)
+        {
+            for(int j=0;j<matrix[0].length;j++)
+            {
+               if(i==j)
+               {
+                sum += matrix[i][j] ;
+               }
+               if(i+j == matrix.length-1)
+               {
+                sum += matrix[i][j] ;
+               }
+            }
+        }
+        int i = (int)matrix.length/2 ;
+        sum -= matrix[i][i] ;
+        System.out.println("the sum is : "+sum);
+    }
+
+//              OR  
+
+    public static void DiagonalSum2(int matrix[][]) 
+    {
+        int sum = 0 ;
+        for(int i=0 ; i<matrix.length ; i++)
+        {
+            //primery
+            sum += matrix[i][i] ;
+            //secondry
+            if(i != matrix.length-1-i)
+            {
+                sum += matrix[i][matrix.length-1-i] ;
+            }
+        }
+        System.out.println("the sum is : "+sum);
+    }
+
+
+
+
+/*search in sorted matrix :
+     ___________________
+    |_10_|_20_|_30_|_40_|    *Approches : 1.linear search
+    |_15_|_25_|_35_|_45_|                 2.Row wisw bineary search 
+    |_27_|_29_|_37_|_48_|                *3.staircase search  0(n+m)
+    |_32_|_33_|_39_|_50_|
+
+    for 32 : (n-1,0):                       for 40 : (0,n-1 :)
+            key< cell_value                         key < cell_value
+                TOP                                     LEFT
+            key > cell_value                        key > cell_value
+                RIGTH                                   DOWN
+*/
+
+    public static void SearchInMetrix(int metrix[][],int key)
+    {
+        int Row = 0, Col = metrix[0].length-1 ;
+        while(Row < metrix.length && Col >= 0)
+        {
+            if(metrix[Row][Col] == key)
+            {
+                System.out.println("key found at index : ("+Row+","+Col+")");
+                return ;
+            }
+
+            else if(key < metrix[Row][Col])
+            {
+                Col--;
+            }
+            else {
+                Row++;
+            }
+        }
+        System.out.println("key not found !!");
+    }
+
+
+
+    public static void main(String args[])
+    {   
+        int matrix[][] ={
+                {1,2,3},
+                {5,6,7},
+                {9,10,11}};
+        SearchInMetrix(matrix,1);
+    }
+}
