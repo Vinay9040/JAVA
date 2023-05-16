@@ -1,0 +1,241 @@
+
+public class Strings {
+    
+
+/* String is a set of char array.
+
+syantax : String str = "abcd" ;
+          String str = new String("abcd");
+
+NOTE : Strings are immutable(non-changeble).
+
+For scan the string : Scanner sc = new Scanner(System.in);
+                      String name ;
+                      name = sc.next(); // for scan only one word.
+                      AND sc.nextLine(); // for scan whole line.
+
+We can know the length of String by : str.length();
+
+*Concatenation : (combine more then one string)
+    EX.  String Firstname = "Vinay";
+         String Lastname = "Keshvala";
+         String Fullname = Firstname + " " + Lastname ;
+         
+*For any perticular character of String : str.charAt(index) 
+    EX. System.out.println(Fullname.charAt(0)) ;
+        OUTPUT : V
+*/
+
+
+//Print the letter of string
+    public static void PrintByLetters(String str) {
+        for(int i=0 ; i < str.length(); i++){
+            System.out.print(str.charAt(i));
+        }
+        System.out.println();
+    }
+
+
+
+//Check the number is palidrom or not
+    public static void isPlindrom(String str){
+        int n = str.length();
+        int i=0;
+        while(i<n/2) {
+            if(str.charAt(i) != str.charAt(n-i-1)) {
+               System.out.println("not palindrom");
+               return ;
+            }
+            i++;
+        }
+        System.out.println("palnidrom");
+    }
+
+
+
+
+//Give a route containing 4 directions(E,W,N,S) find the sortest path to reach destination.
+// path : "WNEENESENNN"
+    public static float getPath(String path) {
+        int x = 0, y = 0;
+        for(int i=0 ; i< path.length() ; i++) {
+            char dir = path.charAt(i);
+
+            if(dir == 'E') {
+                x++;
+            }
+            else if(dir == 'W') {
+                x--;
+            }
+            else if(dir == 'N') {
+                y++;
+            }
+            else{
+                y--;
+            }
+        }
+        int X2 = x*x;
+        int Y2 = y*y;
+        return (float)Math.sqrt(X2 + Y2);
+    }
+
+
+
+
+/* public static void main(String args[]) {
+    String s1 = "vinay";
+    String s2 = "vinay";
+    String s3 = new String("vinay");
+
+    if(s1 == s2) {
+        System.out.println("strings are equil");
+    }else{
+        System.put.println("strings are not equil");
+    }
+
+     if(s1 == s3) {
+        System.out.println("strings are equil");
+    }else{
+        System.put.println("strings are not equil");
+    }
+}
+
+THE OUTPUT IS : strings are equil
+                strings are not equil
+
+Because first we creat the s1 and then s2 so, s2 is also point to s1's address. so java consider as same.
+But, in case of s1 and s3 the s3 was created by "new" keyword so a new string is created another place.
+(although the data is same but, it not consider as same.)
+
+So, In this type of comparition, we use [System.out.println(s1.equels(s3))] function as a condition,
+and it return boolean value.
+*/
+
+
+
+/* Substring : it is a part of string.
+
+There is an inbuild function : str.substring(si,ei) 
+NOTE : here the 'ei' is excluded.
+    EX. He-llow-ord : here si=2 & ei=6
+ */
+
+
+
+
+//write an sub-string function
+    public static void substring(String str,int si,int ei){
+        String sub ="";
+        for(int i=si;i<ei;i++){
+            sub += str.charAt(i);
+        }
+        System.out.println(sub);
+    }
+
+
+
+/*  Largest string :
+
+    Lexicographicaly large : if a string characters has larger ASCII value so that string is large.
+
+    Inbuild function : str1.compareTo(str2)  //case_sensitive
+                       if return value is 0,so both are equile
+                       if return value is -ve,so str1 < str2
+                       if return value is +ve,so str1 > str2
+
+    there is another function to ignore the case : str1.compareToIgnorecase(str2)
+ */
+
+
+
+ //for a given set of strings ,print the largest string : str="apple","mango","banana"
+    public static void  getLargest(String fruits[]){
+        String largest = fruits[0];
+        for(int i=1;i<fruits.length;i++){
+            if(largest.compareTo(fruits[i]) < 0){
+                largest = fruits[i];
+            }
+        }
+        System.out.println(largest);
+    }
+
+
+
+
+
+/* @ StringBuilder : if we done multiple time add charecters in string we use StringBuilder.
+
+we can also convert a classobject into string.
+    EX.Integer a = 10;
+    a.toString();
+
+    NOT like that : int a = 2;
+                    a.toString();
+
+    str.append() : function is used to add at last in the string.
+                   it is better than '+='  operation.
+ */
+
+
+    public static void UseStringBuilder(){
+        StringBuilder sb = new StringBuilder("");
+        for(char ch='a';ch<='z';ch++){
+            sb.append(ch);
+        }
+        System.out.println(sb);
+    }
+
+
+
+// String comprection :  EX."aaabbcccc" ---> "a3b2c4"
+    public static String compress(String str){
+        // String newstr ="";  //OR
+        StringBuilder sb = new StringBuilder("");
+        for(int i=0 ; i < str.length() ; i++){
+            Integer count = 1;
+
+            while(i < str.length()-1 && str.charAt(i) == str.charAt(i+1)){
+                count++;
+                i++;
+            }
+                // newstr += str.charAt(i); // OR
+            sb.append(str.charAt(i));
+            if(count > 1){
+                // newstr += count.toString();   //OR
+                sb.append(count.toString());
+            }
+        }
+        // return newstr;  // OR
+        return sb.toString();
+    }
+
+
+
+//for given string convert each first letter to upper case.
+//  EX."hi, i am vinay" ----> "Hi, I Am Vinay"
+// for this we use : .toUppercase
+
+    public static String toUppercase(String str){
+        StringBuilder sb = new StringBuilder("");
+        char ch = Character.toUpperCase(str.charAt(0));
+        sb.append(ch);
+
+        for(int i=1;i<str.length();i++){
+            if(str.charAt(i) ==' ' && i < str.length()-1){
+                sb.append(str.charAt(i));
+                i++;
+                sb.append(Character.toUpperCase(str.charAt(i)));
+            }
+            else{
+                sb.append(str.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    public static void main(String args[]) {
+       String str = "hi, this is rendom words!!! ";
+       System.out.println(toUppercase(str));;
+    }
+
+}
