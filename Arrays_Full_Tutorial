@@ -15,6 +15,15 @@ import java.util.*;
 
 public class Arr{
 
+    public static void PrintArry(int arr[]){
+        for(int i=0; i<arr.length;i++){
+            System.out.print(arr[i]+" ");
+        }
+        System.out.println();
+    }
+
+
+
     public static void linearsearch(int numbers[],int key)
     {/*Linear search : find the index of element in given array */
 
@@ -269,10 +278,111 @@ public class Arr{
         }return maxProfit;
     }
 
+/* Basic Sorting : arrange in order.
+
+    Basic Algorithams : 1. bubble sort
+                        2. selection sort
+                        3. insertion sort
+                       *4. counting sort 
+ */
+
+// Bubble sort : largest element come to the end of array by swapping with adjest elements.
+    public static void Bubblesort(int arr[]){
+        for(int i=0; i < arr.length-1 ; i++){
+            // if(arr[turn] < arr[turn+1]){
+            //     continue ;
+            // }
+            // esle{
+                for(int j=0;j<arr.length-1-i;j++){
+                    if(arr[j] > arr[j+1]){//foe decreasing order " < "
+                        int temp = arr[j];
+                        arr[j] = arr[j+1];
+                        arr[j+1] = temp ;
+                    }
+                }
+            }
+       // }
+        PrintArry(arr);
+    }
+
+
+
+
+// selection sort : pick the smallest(from the unsorted),put it at the beginning.
+    public static void selectionsort(int arr[]){
+        for(int i=0;i<arr.length-1;i++){
+            int minpos = i;
+            for(int j=i+1;j<arr.length;j++){
+                if(arr[minpos] > arr[j]){//foe decreasing order " < "
+                    minpos = j ;
+                }
+            }
+            //swap
+            int temp = arr[minpos];
+            arr[minpos] = arr[i];
+            arr[i] = temp ;
+        }
+        PrintArry(arr);
+    }
+
+
+
+
+//Insertion sort : pick an element & place in the right position in sorted part.
+    public static void Insertionsort(int arr[]){
+        for(int i=1;i<arr.length;i++){
+            int curr = arr[i];
+            int prev = i-1;
+        //find out the current pos to insert
+
+            while(prev >= 0 && arr[prev] > curr){
+                arr[prev+1] = arr[prev] ;
+                prev--;
+            }
+            //insertion
+            arr[prev+1] = curr;
+        }
+        PrintArry(arr);
+    }
+
+
+
+
+/* Counting sort :it is used in smaller length array.
+
+First we create the count-array to store the frequency of the numbers.if numbers goes
+to 0 to 7 so we create count-array whose length 8.
+                                   _______________________________
+EX. 1,4,1,3,2,4,3,7  so count is  |_0_|_2_|_1_|_2_|_2_|_0_|_0_|_1_|
+                                    0   1   2   3   4   5   6   7
+
+then, In the original array we print the number with (it's)frequency times.
+               _______________________________
+So, we get :  |_1_|_1_|_2_|_3_|_3_|_4_|_4_|_7_|  which is sorted.
+*/
+    public static void Countingsort(int arr[]){
+        int largest = Integer.MIN_VALUE;
+        for(int i=0;i<arr.length;i++){
+            largest = Math.max(largest,arr[i]);
+        }
+        int count[] = new int[largest+1];
+        for(int i=0;i<arr.length;i++){
+            count[arr[i]]++;
+        }
+        //sorting
+        int j=0;
+        for(int i=0;i<count.length;i++){
+            while(count[i] > 0){
+                arr[i] = i ;
+                j++ ;
+                count[i]--;
+            }
+        }PrintArry(arr);
+    }
 
 
     public static void main(String[] args) {
-    int profit[] = {7,1,5,3,6,4};
-    System.out.println(BuyAndSellStocks(profit));
+    int arr[] = {9,8,7,4,4,5,9,7,4,6,5,1,3,8,5,5,6,3,2,1,0};
+    Insertionsort(arr);
     }
 }
