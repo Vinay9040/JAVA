@@ -1,0 +1,328 @@
+// import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+
+public class queueB {
+    /*  Queue : FIFO type data structure.
+
+        Implementation : Array,LinkedList,Stack
+
+        Operactions : 1.add(enque) 2.remove(Dequeue) 3.Peek(Front)  //0(1)
+
+
+        1. Array : fixed size, for remove operation TC = 0(n) , so it not prefer but in case of 
+                   circular Queue it prefer & in that case remove TC is 0(1).
+    
+    static class Queue{
+        static int arr[];
+        static int size;
+        static int rear;
+        Queue(int n){
+            arr = new int[n];
+            size = n;
+            rear = -1;
+        }
+        public static boolean isEmpty(){
+            return rear == -1;
+        }
+        public static boolean isFull(){
+            return rear == size-1;
+        }
+        public void add(int data){
+            if(isFull()){
+                System.out.println("Queue is Full");
+                return;
+            }
+            arr[++rear] = data;
+        }
+        public  int remove(){
+            if(isEmpty()){
+                System.out.println("Queue is Empty");
+                return Integer.MIN_VALUE;
+            }
+            int val = arr[0];
+            for(int i=0;i<rear;i++){
+                arr[i] = arr[i+1];
+            }
+            rear--;
+            return val;
+        }
+        public int peek(){
+            if(isEmpty()){
+                System.out.println("Queue is Empty");
+                return Integer.MIN_VALUE;
+            }
+            return arr[0];
+        }
+    }
+
+    
+
+    2. Circulay Queue :
+    static class cQueue{
+        static int arr[];
+        static int size;
+        static int front;
+        static int rear;
+        public cQueue(int n){
+            arr = new int[n];
+            size = n;
+            front = rear = -1;
+        }
+
+        public static boolean isEmpty(){
+            return front == -1;
+        }
+
+        public static boolean isFull(){
+            return front == (rear+1)%size;
+        }
+
+        public void add(int data){
+            if(isFull()){
+                System.out.println("cQueue is full");
+                return ;
+            }
+            else if(isEmpty()){
+                front = rear = 0;
+                arr[rear] = data;
+            }
+            else{
+                rear = (rear+1)%size;
+                arr[rear] = data;
+            }
+        }
+
+        public int remove(){
+            if(isEmpty()){
+                System.out.println("cQueue is Empty");
+                return Integer.MIN_VALUE;
+            }
+            if(front == rear){
+                int val = arr[front];
+                front = rear = -1;
+                return val;
+            }
+            int val = arr[front];
+            front = (front+1)%size;
+            return val;
+        }
+
+        public int peek(){
+            if(isEmpty()){
+                System.out.println("cQueue is Empty");
+                return Integer.MIN_VALUE;
+            }
+            return arr[front];
+        }
+    }
+    */
+
+
+    // 3. Queue using Linkedlist :
+    // static class Node{
+    //     int data;
+    //     Node next;
+    //     Node(int data){
+    //         this.data = data;
+    //         this.next = null;
+    //     }
+    // }
+
+    // static class Queue{
+    //     static Node head = null;
+    //     static Node tail = null;
+
+    //     public boolean isEmpty(){
+    //         return head == null;
+    //     }
+
+    //     public void add(int data){
+    //         if(isEmpty()){
+    //             Node newnode = new Node(data);
+    //             head = tail = newnode;
+    //             return;
+    //         }
+    //         Node newnode = new Node(data);
+    //         tail.next = newnode;
+    //         tail = newnode;
+    //     }
+
+    //     public int remove(){
+    //         if(isEmpty()){
+    //             System.out.println("Queue is empty !");
+    //             return Integer.MIN_VALUE;
+    //         }
+    //         int val = head.data;
+    //         head = head.next;
+    //         return val;
+    //     }
+
+    //     public int peek(){
+    //         if(isEmpty()){
+    //             System.out.println("Queue is empty !");
+    //             return Integer.MIN_VALUE;
+    //         }
+    //         return head.data;
+    //     }
+    // }
+
+    
+    // Queue by java utility packages :
+    // declaration : Queue<Integer> q = new LinkedList<>();   implemented by ArrayDeque
+
+    //implement Queue using 2 stacks :
+    // Approaches : 1. add operation 0(n)  2. remove operatin 0(n)
+
+    
+    // static class queue<G>{ //generics
+    //     Stack<G> s1 = new Stack<>();
+    //     Stack<G> s2 = new Stack<>();
+
+    // Approach 1 :
+
+    //     public boolean isEmpty(){
+    //         return s1.isEmpty();
+    //     }
+
+    //     public void add(G data){
+    //         if(s1.isEmpty()){
+    //             s1.add(data);
+    //             return;
+    //         }
+    //         while(!s1.isEmpty()){
+    //             s2.add(s1.pop());
+    //         }
+    //         s1.add(data);
+    //         while(!s2.isEmpty()){
+    //             s1.add(s2.pop());
+    //         }
+    //     }
+
+    //     public G remove(){
+    //         if(s1.isEmpty()){
+    //             System.out.println("Queue is Empty !");
+    //             return null;
+    //         }
+    //         return s1.pop();
+    //     }
+
+    //     public G peek(){
+    //         if(s1.isEmpty()){
+    //             System.out.println("Queue is Empty !");
+    //             return null;
+    //         }
+    //         return s1.peek();
+    //     }
+
+
+    // Approach 2 :
+    //     public boolean isEmpty(){
+    //         return s1.isEmpty();
+    //     }
+
+    //     public void add(G data){
+    //         s1.add(data);
+    //     }
+
+    //     public G remove(){
+    //         if(isEmpty()){
+    //             System.out.println("Queue is Empty !");
+    //             return null;
+    //         }
+    //         while(!s1.isEmpty()){
+    //             s2.add(s1.pop());
+    //         }
+    //         G val = s2.pop();
+    //         while(!s2.isEmpty()){
+    //             s1.add(s2.pop());
+    //         }
+    //         return val;
+    //     }
+
+    //     public G peek(){
+    //         if(isEmpty()){
+    //             System.out.println("Queue is Empty !");
+    //             return null;
+    //         }
+    //         while(!s1.isEmpty()){
+    //             s2.add(s1.pop());
+    //         }
+    //         G val = s2.peek();
+    //         while(!s2.isEmpty()){
+    //             s1.add(s2.pop());
+    //         }
+    //         return val;
+    //     }
+    // }
+
+
+
+
+    // First non-reapeting letter : in a stream of charecters.  0(n)
+    // EX.    input = {a,a,b,c,c,x,b}  => {a,-1,b,b,b,b,x}
+    public static void printNrepet(String str){
+        int freq[] = new int[26];
+        Queue<Character> q = new LinkedList<>();
+        for(int i=0;i<str.length();i++){
+            char ch = str.charAt(i);
+            q.add(ch);
+            freq[ch - 'a']++;
+            while(!q.isEmpty() && freq[q.peek() - 'a'] > 1){
+                q.remove();
+            }
+            if(q.isEmpty()){
+                System.out.print("-1 ");
+            }else{
+                System.out.print(q.peek() + " ");
+            }
+        }
+        System.out.println();
+    }
+
+    
+
+    // Inter Leave 2 half of a Queue :
+    public static void interleave(Queue<Integer> q){ // for even
+        Queue<Integer> halfQ = new LinkedList<>();
+        int middle = q.size()/2;
+        if(q.size() % 2 != 0){
+            middle++;
+        }
+        for(int i=0;i<middle;i++){
+            halfQ.add(q.remove());
+        }
+        while(!halfQ.isEmpty()){
+            q.add(halfQ.remove());
+            q.add(q.remove());
+        }
+    }
+
+
+    // Reverse Queue
+    public static void reverseQ(Queue<Integer> q){
+        Stack<Integer> s = new Stack<>();
+        while(!q.isEmpty()){
+            s.push(q.remove());
+        }
+        while(!s.isEmpty()){
+            q.add(s.pop());
+        }
+    }
+
+    
+
+    public static void main(String args[]){
+        Queue<Integer> q = new LinkedList<>();
+        for(int i=0;i<10;i++){
+            q.add(i);
+        }
+        reverseQ(q);
+        while(!q.isEmpty()){
+            System.out.print(q.remove() + " ");
+        }
+    }
+
+}
