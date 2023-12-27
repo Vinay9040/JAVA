@@ -1,0 +1,135 @@
+public class DivideAconqure {
+
+    // Merge Sort :
+    /*
+     * Approach : (i)Divide from mid
+     * (ii)Merge sort(left)
+     * (iii)Merge sort(rigth)
+     * (iv)merge
+     */
+
+    private static void merge(int arr[], int si, int mid, int ei) {
+        int temp[] = new int[ei - si + 1];
+        int i = si; // itorator for left
+        int j = mid + 1; // itorator for right
+        int k = 0; // itorator for temp
+
+        while (i <= mid && j <= ei) { // arrange in order
+            if (arr[i] < arr[j]) {
+                temp[k] = arr[i];
+                i++;
+            } else {
+                temp[k] = arr[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i <= mid) { // Remening elements
+            temp[k++] = arr[i++];
+        }
+
+        while (j <= ei) { // Remening elements
+            temp[k++] = arr[j++];
+        }
+
+        // Now copy temp to original
+        for (k = 0, i = si; k < temp.length; k++, i++) {
+            arr[i] = temp[k];
+        }
+
+    }
+
+    public static void mergeSort(int arr[], int si, int ei) {
+        if (si >= ei) {
+            return;
+        }
+        // kaam
+        int mid = si + (ei - si) / 2;
+        mergeSort(arr, si, mid);
+        mergeSort(arr, mid + 1, ei);
+        merge(arr, si, mid, ei);
+    }
+
+    private static int partion(int arr[], int si, int ei) {
+        int pivot = arr[ei];
+        int i = si - 1; // to make place for elements which is < pivot
+        for (int j = si; j < ei; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                // swap
+                int temp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = temp;
+            }
+        }
+        i++;
+        // place pivot to it right place
+        int temp = pivot;
+        arr[ei] = arr[i];
+        arr[i] = temp;
+        return i;
+    }
+
+    public static void quickSort(int arr[], int si, int ei) {
+        if (si >= ei) {
+            return;
+        } // last elements
+        int pidx = partion(arr, si, ei);
+        quickSort(arr, si, pidx - 1); // left
+        quickSort(arr, pidx + 1, ei); // right
+    }
+
+    /*
+     * Search in rotated sorted array :
+     * sorted, rotated array with distance number (in assending order) it is rotated
+     * at a pivot point, find the index of
+     * given element.
+     * 
+     * Approach : Modify binary search | / L1
+     * case 1 : mid on L1 | /
+     * case a: L1 left(si <=mid <=ei) | /
+     * case b: else right | /
+     * case 2 : mid on L2 | /
+     * case a: L2 right | / L2
+     * case b: l2 left | /
+     * --------------------------
+     */
+
+    public static int MBinarysearch(int arr[], int tar, int si, int ei) {
+        if (si > ei) {
+            return -1;
+        }
+        // kaam
+        int mid = si + (ei - si) / 2;
+        // case found
+        if (arr[mid] == tar) {
+            return mid;
+        }
+        // mid on L1
+        if (arr[si] <= arr[mid]) {
+            if (arr[si] <= tar && tar <= arr[mid]) {
+                return MBinarysearch(arr, tar, si, mid - 1);
+            } else {
+                return MBinarysearch(arr, tar, mid - 1, ei);
+            }
+        }
+        // mid on L2
+        else {
+            if (arr[mid] <= tar && tar <= arr[ei]) {
+                return MBinarysearch(arr, tar, mid + 1, ei);
+            } else {
+                return MBinarysearch(arr, tar, si, mid - 1);
+            }
+        }
+    }
+
+    public static void main(String args[]) {
+        int arr[] = { 5,6,7,8,9,0,1,2,3,4 };
+        System.out.println(MBinarysearch(arr, 6, 0, 9));
+
+        // for (int idx : arr) {
+        //     System.out.print(arr[idx] + " ");
+        // }
+    }
+}
