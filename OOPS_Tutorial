@@ -1,0 +1,306 @@
+public class OOPS {
+    /*
+     @ Object : entities in the real word.
+
+     @ Classes : group of Objects.(same as structure in C)
+
+                classes = attributes + functions
+                         (proparties) (behaviors)
+
+
+            EX. class Pen {
+                    String color; //property
+                    int tip;        //property
+
+                    void setcolor(String newcolor){  //functions/methods
+                        color = newcolor;
+                    }
+                    void settip(int newtip){    //methods
+                        tip = newtip;
+                    }            
+                }
+
+                public static void main(String args[]){
+                    Pen p1 = new Pen(); //create a pen object
+                    p1.setcolor("Blue"); //OR p1.color = "Blue";
+                    System.out.println(p1.color);
+                    p1.settip(5);
+                    System.out.println(p1.tip);
+                }
+
+        @ Objects are created in heap memory & all the class is below the public class
+
+
+        --------------------------------------------------------------------------------
+
+        OOPS : (i)Encapsulatin,(ii)inheritance,(iii)abstraction,(iv)polymorphism
+
+        (i) Encapsulation : it is define as the wrapping up of data & methods under a single unit.
+                            it also imllements data hinding.
+
+        * access modifier topic is named encapsulation.
+
+        @  Access Modifiers :
+                name         access in 
+
+                private : within class
+
+                default : within class, package
+
+                protected : within class, package, subclasses
+
+                public : within class, package, subclasses, outside package
+
+
+
+        EX. public class OOPS{
+                class BankAcc{
+                    public String username;
+                    private String password;
+                }
+                public static void main(String args[]){
+                    BankAcc MyAcc = new BankAcc();
+                    MyAcc.username = "vinay";
+                    MyAcc.password = "abcd";  //this line give error
+                }
+            }
+
+
+        * In this case the password is private so, it can't able to use outside the class.
+
+        * In this case we make a method to the change the password,otherwise no any use of password !
+
+        * So, we add in class 
+                        class BankAcc{
+                            public void setpass(String pwd){
+                                password = pwd;
+                            }
+                        }
+
+        and in main : MyAcc.setpass("abcd");
+
+
+
+        --------------------------------------------------------------------------------
+        * there are mainly two types of methods to access the properties : 
+            (i)getter function : to return the value
+            (ii)setter function : to modify the value
+
+        * this keyword : "this" keyword is use to refer to the current object.
+
+        
+        @ Constructor : it is a special method which is invoked automatically at the time of object creation.
+
+        *constructor have the same name as class.
+        *iti don't have return type (not even void).
+        *it is only called once, at object creation.
+        *memory allocation happens when constructor is called.
+
+        NOTE : if we don't create a constuctor, JAVA automatically create it.
+
+        *simply : constructor is a function which which has same name as class & we don't called it to perform 
+                  a task it automatically perform it when we create it.
+
+
+        @ Types of cunstructor : (i)non-parameterize
+                                 (ii)parameterize
+                                 (iii)copy constructor
+        
+        NOTE : we can create multipal contructor in a class but diffrent no. of parameters OR diff. datatypes
+               of parameters.
+
+
+        (iii)copy constructor : to make copy of another object(it takes itself as perameter).
+
+
+            EX.
+
+                        public class OOPS{
+                            class Student{
+                                String name;
+                                int roll;
+                                String pass;
+                                //copy contructor
+                                Student(Student s1){
+                                    this.name = s1.name;
+                                    this.roll = s1.roll;
+                                }
+
+                            }
+                            public static void main(String args[]){
+                                Student s1 = new Student();
+                                s1.name = "xyz";
+                                s1.roll = 123;
+                                s1.pass = "abcd";
+
+                                student s2 = new Student(s1);
+                                s2.pass = "pqrs";
+                            }
+                        }
+        * in the copy constructor the new oblect is copy as shallow copy (reference copy).
+
+        @ Shallow & Deep copy :
+
+        * in Shallow copy reference copy so the changes in original are reflect 
+        * in deep copy we create it by "new" keyword so a new space allocate and all values copy there so,
+          the changes in original are not reflect.
+
+        ----------------------------------------------------------------------------------------------------------
+        (ii)Inheritence : when properties & methods of base class are passed to a derived class it called.....
+
+            EX.   class Animal{
+                      .........
+                  }
+                  class Fish extends Animal{
+                    ..................
+                  }
+
+        Types :(i)single level inheritence
+               (ii)multilevel inheritance
+               (iii)hierachial inheritance
+               (iv)hybrid inheritance
+               *multiple inheritance : done by interfaces 
+
+        NOTE : if we subclass object & it's constrotor so, parents constructor is also active(called).
+
+        ---------------------------------------------------------------------------------------------------------
+        (iii)polymorphism : poly(many) + morphism(forms)
+            
+            1.compile time polymorphism(static) : method overloading
+            2.Run time polymorphism(dynamic) : method overriding
+
+            *method overloading : multiple functions with the same name but different perameters.
+            *method overriding : parent & child classes both contain the same function with a definition.
+
+            *at that time child's function has higher priorty.
+
+        ---------------------------------------------------------------------------------------------------------
+
+        (iv)Abstraction : hiding all the unnecessary details & showing only the important parts to the user.
+
+        *abstract classes
+        *interfaces
+
+        *abstract classes : apply by :
+                                        abstract class A{
+                                            ............
+                                        }
+        *can't create an instance(object) of abstract class.
+        *can have abstract / non-abstract methods(functions).
+        *can have constructors.
+
+        EX.
+                abstract class Animal{
+                    void eat(){
+                        System.out.println("animals eats");
+                    }
+                    abstract void walk(); //it means we must declare this method for child classes,otherwise 
+                                          // this line give an error
+                }
+                class Horse extends Animals{
+                    void walk(){
+                        System.out.println("animals eats");
+                    }
+                }
+
+        *in this sode we create a abstract class animal so, we can't create a Animal object in main,
+         Because of abstraction.
+        *if we apply abstract keyword to an class or function it can't useable for that area & for child
+         classes it must.
+         
+        @ interfaces : it is a blueprint of class.
+
+        *use for : multiple inheritaance & total abstaction.
+
+        *for inherit class use "extends" & in interfaces we use "implements".
+
+        Properties : all methods are public, abstract & without implemantation.
+                     variables in the interface are final , public & static.
+                     use achive total abstration.
+
+        
+        EX.   interface ChassPlayer{
+                    void move();
+               }
+
+               class Queen implements chessPlayer{
+                    public void move(){
+                        System.out.println("left,right,up,down");
+
+                    }
+                }
+
+
+        *example of multi level inheritance.
+                    interface herbivor{
+                        ............
+                    }
+                    interface carnivor{
+                        ...........
+                    }
+                    class Bear implements herbivor,carnivor{
+                        .................................
+                    }
+
+        -------------------------------------------------------------------------------------------------------
+
+        * Static keyword : it is use in java to share the same variable or method of a given class
+
+        Apply for : properties,functions,blocks & nested classes
+
+        EX.      class Student{
+                    String name;
+                    int roll;
+                    static String school_name;
+                }
+
+    
+        *super keyword : it is used to refer immediate parent class object.
+
+        use for : access parents properties,functions, constructors.
+
+
+
+        EX.     class Animal{
+                    Animal(){
+                        System.out.println("animals");
+                    }
+                }
+
+                class House extends Animal{
+                    super();
+                    System.out.println("house");
+                }
+
+
+        *so,output like "animals house" , because super keyword called animal constructor , but java bydefault
+         create it.
+
+
+         ------------------------------------------------------------------------------------------------------
+
+
+         IMP NOTES :
+
+         * in java no class has private nor protected modifier.if we use it so ,that class is become nonuseable.
+          
+                name           always only 
+               class  :      default & public
+            neasted class: private, default,protected,public
+            constructor :  private, default,protected,public
+              methods :    private, default,protected,public
+            field(block) : private, default,protected,public
+
+
+            @
+                    class vehical{
+                        .......
+                    }
+                    class car extends vehical{
+                        ...............
+                    }
+
+                    so, vehical v = new car();  => true
+                    but, car c = new vehical(); => false
+     */
+}
