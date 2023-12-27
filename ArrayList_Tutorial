@@ -1,0 +1,228 @@
+import java.util.ArrayList;
+public class Arraylist {
+    
+/*      Array             ArrayList
+    * Fixed size        *dynamic size
+    *primitive data     *primitive data types 
+     types can be        can't be stored directly
+     stored
+
+    *Creat ArrayList :
+            ArrayList<Integer> List_name = new ArrayList<>();
+
+    *Operactions :
+        Add Element : List.add(value) //O(1)
+        Get Element : int ele = List.get(index) //O(1)
+        Remove Ele  : List.remove(index)  //O(n)
+        Set Element : List.set(idx,val)  //O(n) & replace
+        Countains el: Syso(List.contains(val)) // return boolean & O(n)
+        Another Add : List.add(idx,val)  // O(n)
+        size of AL  : List.size()  //O(n)
+ */
+
+
+// Print ArrayList in reverse order
+public static void printInR(ArrayList<Integer> AL){
+    for(int i= AL.size()-1;i>=0;i--){
+        System.out.print(AL.get(i)+" ");
+    }
+    System.out.println();
+}
+
+//print maximum element of AL
+public static int getMax(ArrayList<Integer> AL){
+    int max = Integer.MIN_VALUE;
+    for(int i=0;i<AL.size();i++){
+        max = Math.max(max,AL.get(i));
+    }
+    return max;
+}
+
+//swap to numbers
+public static void swapElements(ArrayList<Integer> AL ,int idx1, int idx2){
+    int temp = AL.get(idx1);
+    AL.set(idx1,AL.get(idx2));
+    AL.set(idx2,temp);
+}
+
+
+/*
+    Sortiing in ArrayList : Collection.sort(name);
+
+    for desending order : collection.sort(name,collections.reversorder());
+ 
+MultiDiamentional ArrayList:
+
+    ArrayList<Arraylist<Integer>> mainList = new ArrayList<>();
+    ArrayList<Integer> List = new ArrayList<>();
+
+    List.add(1);
+    List.add(2);
+    mainList.add(List);
+
+    ArrayList<Integer> List2 = new ArrayList<>();
+    List2.add(1);
+    List2.add(2);
+    mainList.add(List2);
+
+    # print
+    for(int i=0;i<mainList.size();i++){
+        ArrayList<Integer> currList = mainList.get(i);
+        for(int j=0;j<currList.size();j++){
+            System.out.print(currList.get(j)+" ");
+        }
+        System.out.println();
+    }
+    //print mainList
+    System.out.println(mainList);
+*/
+
+
+/* Create multidiamentinal arratlist which contains : L1 : 1 2 3 4 5
+                                                      L2 : 2 4 6 8 10
+                                                      L3 : 3 6 9 12 15
+*/
+
+public static void multiDiaExe(){
+    ArrayList<ArrayList<Integer>> main = new ArrayList<>();
+    ArrayList<Integer> L1 = new ArrayList<>();
+    ArrayList<Integer> L2 = new ArrayList<>();
+    ArrayList<Integer> L3 = new ArrayList<>();
+
+    for(int i=1; i<6 ;i++){
+        L1.add(i);
+        L2.add(2*i);
+        L3.add(3*i);
+    }
+
+    main.add(L1);
+    main.add(L2);
+    main.add(L3);
+
+    for(int i=0; i<main.size();i++){
+        ArrayList<Integer> curr = main.get(i);
+        System.out.print("The "+(i+1)+" List : ");
+        for(int j=0; j<curr.size(); j++){
+            System.out.print(curr.get(j)+" ");
+        }
+        System.out.println();
+    }
+    System.out.println("main List : " + main);
+}
+
+
+/*
+    Countain with most water : for a given N lines of x-axis use 2 lines to from a container such that it 
+                               holds maximum water.
+    heigth[] = {1,8,6,2,5,4,8,3,7}
+ */
+// Bruteforce Approach : basic logic 0(n^2)
+public static void storeWater(ArrayList<Integer> height){
+    int maxWater = 0;
+    for(int i=0;i<height.size();i++){
+        for(int j=i+1;j<height.size();j++){
+            int ht =Math.min(height.get(i),height.get(j));
+            int width = j-i;
+            int currwater = ht * width;
+            maxWater = Math.max(maxWater,currwater);
+        }
+    }
+    System.out.println(maxWater);
+}
+
+
+// 2 pointer Approach : 0(n)
+public static int storeWater2(ArrayList<Integer> heigth){
+    int maxWater = 0;
+    int lp = 0, rp = heigth.size()-1;
+
+    while(lp < rp){// calculate water area
+        int ht = Math.min(heigth.get(lp),heigth.get(rp));
+        int width = rp - lp;
+        int currwater = ht * width;
+        maxWater = Math.max(maxWater, currwater);
+        if(heigth.get(lp) < heigth.get(rp)){//update ptr
+            lp++;
+        }else{
+            rp--;
+        }
+    }
+    return maxWater;
+}
+
+
+// Pairsum-1 : find if any pair in a sorted arraylist has a target sum.
+// Brute force approach : 0(n^2)
+public static boolean pairsum1(ArrayList<Integer> list,int target){
+    for(int i=0; i<list.size();i++){
+        for(int j=i+1; j<list.size();j++){
+            if(list.get(i)+list.get(j) == target){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// 2 pointer approach : 0(n)
+public static boolean pairsum2(ArrayList<Integer> list, int target){
+    int lp = 0 , rp = list.size()-1;
+    while(lp != rp){
+        if(list.get(lp) + list.get(rp) == target){
+            return true;
+        }
+        if(list.get(lp) + list.get(rp) < target){
+            lp++;
+        }else{
+            rp--;
+        }
+    }
+    return false;
+}
+
+
+// pairsum2 : for a sorted & rotated at pivot point
+// if we use bruteforce approach : 0(n^2) as same as above bruteforce goes every single index.
+
+//but here we use 2 pointer approach : 0(n)
+public static boolean pairSum2(ArrayList<Integer> list , int target){
+    int bp = -1, n = list.size()-1;
+    for(int i=0; i<list.size();i++){
+        if(list.get(i) > list.get(i+1)){ // breaking point
+            bp = i;
+            break;
+        }
+    }
+
+    int lp = bp+1; //smallest
+    int rp = bp; //largest
+
+    while(lp != rp){
+        if(list.get(lp) + list.get(rp) == target){
+            return true;
+        }
+        else if(list.get(lp) + list.get(rp) < target){
+            lp = (lp + 1) % n;
+        }else{
+            rp = (rp + 1) % n;
+        }
+    }
+    return false;
+}
+
+public static void main(String args[]){
+    ArrayList<Integer> arr = new ArrayList<>();
+    
+    arr.add(4);
+    arr.add(5);
+    arr.add(6);
+    arr.add(7);
+    arr.add(8);
+    arr.add(9);
+    arr.add(1);
+    arr.add(2);
+    arr.add(3);
+    //System.out.println(arr);
+    System.out.println(pairSum2(arr, 10));
+   }
+}
