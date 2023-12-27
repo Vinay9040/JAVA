@@ -1,0 +1,435 @@
+import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class stackB {
+
+    // Stack : it is data structure is a linear type of data structure that follow
+    // the LIFO principal.
+
+    // Implemention : 1.implicit stack(inbuild) 2.explicit stack(userdfine)
+
+    // Ways to explicit stack implimentation : 1.Array 2.ArrayList 3.LinkedList
+
+    // By ArrayList :
+
+    // import java.util.ArrayList;
+    // static class stack {
+    // static ArrayList<Integer> list = new ArrayList<>();
+    // int top = -1;
+
+    // public boolean isEmpty(){
+    // return list.size() == 0;
+    // }
+    // public void push(int data){
+    // list.add(data);
+    // top++;
+    // }
+    // public int pop(){
+    // if(isEmpty()){
+    // return -1;
+    // }
+    // int temp = list.remove(list.size()-1);
+    // top--;
+    // return temp;
+    // }
+    // public int peek(){
+    // return list.get(list.size()-1);
+    // }
+    // public void display(){
+    // if(isEmpty()){
+    // System.out.println("stack iss empty");
+    // return ;
+    // }
+    // int temp = top;
+    // while(temp >= 0){
+    // System.out.println(stack.list.get(temp));
+    // temp--;
+    // }
+    // }
+    // }
+
+    // By LinkedList :
+    // static class Node{
+    // int data;
+    // Node next;
+    // public Node(int data){
+    // this.data = data;
+    // this.next = null;
+    // }
+    // }
+
+    // static class stack{
+    // static Node head = null;
+
+    // public static boolean isEmpty(){
+    // return head == null;
+    // }
+
+    // public void push(int data){
+    // Node newnode = new Node(data);
+    // if(isEmpty()){
+    // head = newnode;
+    // return;
+    // }
+    // newnode.next = head;
+    // head = newnode;
+    // }
+
+    // public int pop(){
+    // if(isEmpty()){
+    // System.out.println("stack is empty !");
+    // return Integer.MIN_VALUE;
+    // }
+    // int val = head.data;
+    // head = head.next;
+    // return val;
+    // }
+
+    // public int peek(){
+    // if(isEmpty()){
+    // System.out.println("stack is empty !");
+    // return Integer.MIN_VALUE;
+    // }
+    // return head.data;
+    // }
+
+    // public void display(){
+    // if(isEmpty()){
+    // System.out.println("stack is empty !");
+    // return ;
+    // }
+    // Node temp = head;
+    // while(temp != null){
+    // System.out.println(temp.data);
+    // temp = temp.next;
+    // }
+    // }
+    // }
+
+    // Inbuild stack by java collection framwork
+
+    // import java.util,Stack;
+
+    // Push at the buttom of the stack.
+    public static void pushAtBottom(Stack<Integer> s, int data) {
+        if (s.isEmpty()) {
+            s.push(data);
+            return;
+        }
+        int top = s.pop();
+        pushAtBottom(s, data);
+        s.push(top);
+    }
+
+    // Reverse a string using stack
+    public static String reverseStr(String str) {
+        Stack<Character> s = new Stack<>();
+        int idx = 0;
+        while (idx < str.length()) {
+            char ch = str.charAt(idx);
+            s.push(ch);
+            idx++;
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!s.isEmpty()) {
+            sb.append(s.pop());
+        }
+        return sb.toString();
+    }
+
+    // Reverse stack
+    public static void reverseStack(Stack<Integer> s) {
+        if (s.isEmpty()) {
+            return;
+        }
+        int temp = s.pop();
+        reverseStack(s);
+        pushAtBottom(s, temp);
+    }
+
+    // Stock spam problem : max no.of consecative ays for for which price <+ today'sprice.
+    // int stock[] = {100, 80,60,70,60,85,100}
+    // span = i - prevhigh
+
+    public static void stockSpan(int stock[], int span[]) {
+        Stack<Integer> s = new Stack<>();
+        span[0] = 1;
+        s.push(0);
+        for (int i = 1; i < stock.length; i++) {
+            int currprice = stock[i];
+            while (!s.isEmpty() && currprice > stock[s.peek()]) {
+                s.pop();
+            }
+            if (s.isEmpty()) {
+                span[i] = i + 1;
+            } else {
+                int prevHigh = s.peek();
+                span[i] = i - prevHigh;
+            }
+            s.push(i);
+        }
+    }
+
+
+    // Next greater element : the next greater element of some element X in an array is the first 
+    //                        greater element that is to the rigth of X in the same array.
+    // array[] = {6,8,0,1,3}   => nextgreater[] = {8,-1,1,3,-1}
+
+    // Similar Question : 
+    // 1.next greater left : change loop direction
+    // 2.next smaller right: change while's condition to '>='
+    // 3.next smaller left : change loop direction & while's condition to '>='
+    public static void nextGreater(int arr[], int nextgreater[]){
+        Stack<Integer> s = new Stack<>();
+        for(int i=arr.length-1;i>=0;i--){
+            while(!s.isEmpty() && arr[s.peek()] <= arr[i]){
+                s.pop();
+            }
+            if(s.isEmpty()){
+                nextgreater[i] =-1;
+            }else{
+                nextgreater[i] = arr[s.peek()];
+            }
+            s.push(i);
+        }
+        //print
+        for(int i=0;i<nextgreater.length;i++){
+            System.out.print(nextgreater[i]+" ");
+        }
+        System.out.println();
+    }
+    
+
+
+    // Valid parentheses : give a string S cantaining jast charecters '(',')','{','}'.'[',']' ,
+    //                     detemine if the input string is valid.
+    public static boolean isValid(String str){
+        Stack<Character> s = new Stack<>();
+        for(int i=0; i<str.length();i++){
+            char ch = str.charAt(i);
+            if(ch == '(' || ch == '{' || ch == '['){
+                s.push(ch);
+            }else{
+                if(s.isEmpty()){
+                    return false;
+                }else if((s.peek() == '(' && ch == ')') ||
+                         (s.peek() == '{' && ch == '}') ||
+                         (s.peek() == '[' && ch == ']')){
+                            s.pop();
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        return s.isEmpty();
+    }
+
+
+    // Duplicate Parentheses : given a balence expression, find if it contains duplicate parentheses 
+    //                         or not a set of parentheses are duplicate if the same dubexpression true 
+    //                         if it contains duplicates else false.
+    //EX. ((a+b) + (c+d)) --> false    (((a+b))+c) --> true
+    public static boolean isDuplicate(String str){
+        Stack<Character> s = new Stack<>();
+        for(int i=0;i<str.length();i++){
+            char ch = str.charAt(i);
+            if(ch == ')'){
+                int count = 0;
+                while(s.pop() != '('){
+                    count++;
+                }
+                if(count < 1){
+                    return true;
+                }
+            }else{
+                    s.push(ch);
+            }
+        }
+        return false;
+    }
+
+
+    // Max-area in Histrogram : given an array of integars heights representing the histrogram's 
+    //                          bar height where the width of each bar is 1, return the area of 
+    //                          the largest rectangle in the histrogram.
+    // EX. height = {2,1,5,6,2,3}  ans = 10
+
+    public static void maxArea(int arr[]){
+        int maxarea = 0;
+        int nsr[] = new int[arr.length];
+        int nsl[] = new int[arr.length];
+        Stack<Integer> s = new Stack<>();
+        //NSR
+        for(int i=arr.length-1;i>=0;i--){
+            while(!s.isEmpty() && arr[s.peek()] >= arr[i]){
+                s.pop();
+            }
+            if(s.isEmpty()){
+                nsr[i] = arr.length;
+            }else{
+                nsr[i] = s.peek();
+            }
+            s.push(i);
+        }
+        s = new Stack<>();// Stack become Empty
+        //nsl
+        for(int i=0;i<arr.length;i++){
+            while(!s.isEmpty() && arr[s.peek()] >= arr[i]){
+                s.pop();
+            }
+            if(s.isEmpty()){
+                nsl[i] = -1;
+            }else{
+                nsl[i] = s.peek();
+            }
+            s.push(i);
+        }
+        //currarea : width = j-i-1
+        for(int i=0;i<arr.length;i++){
+            int height = arr[i];
+            int width = nsr[i] - nsl[i] -1;
+            int currarea = height * width;
+            maxarea = Math.max(currarea,maxarea);
+        }
+        System.out.println(maxarea);
+    }
+
+
+    // implement stack by 2 queues 
+    //here are two way to done : 1.push() 0(n)  2. pop() 0(n)
+    static class stack<G>{  //generics
+        Queue<G> q1 = new LinkedList<>();
+        Queue<G> q2 = new LinkedList<>();
+
+        // Approach 1 :
+        // public boolean isEmpty(){
+        //     return q1.isEmpty() && q2.isEmpty();
+        // }
+
+        // public void push(G data){
+        //     if(isEmpty()){
+        //         q1.add(data);
+        //         return;
+        //     }
+        //     if(q1.isEmpty()){
+        //         q1.add(data);
+        //         while(!q2.isEmpty()){
+        //             q1.add(q2.remove());
+        //         }
+        //     }
+        //     else{
+        //         q2.add(data);
+        //         while(!q1.isEmpty()){
+        //             q2.add(q1.remove());
+        //         }
+        //     }
+        // }
+
+        // public G pop(){
+        //     if(isEmpty()){
+        //         System.out.println("stack is Empty !");
+        //         return null;
+        //     }
+        //     G val;
+        //     if(q1.isEmpty()){
+        //         val = q2.remove();
+        //     }
+        //     else{
+        //         val = q1.remove();
+        //     }
+        //     return val;
+        // }
+
+        // public G peek(){
+        //     if(isEmpty()){
+        //         System.out.println("stack is Empty !");
+        //         return null;
+        //     }
+        //     G val;
+        //     if(q1.isEmpty()){
+        //         val = q2.peek();
+        //     }
+        //     else{
+        //         val = q1.peek();
+        //     }
+        //     return val;
+        // }
+
+        //Approch 2 :
+        public boolean isEmpty(){
+            return q1.isEmpty() && q2.isEmpty();
+        }
+
+        public void push(G data){
+            if(q1.isEmpty()){
+                q2.add(data);
+            }
+            else{
+                q1.add(data);
+            }
+        }
+
+        public G pop(){
+            if(isEmpty()){
+                System.out.println("Stack is Empty !");
+                return null;
+            }
+            G top = null;
+            if(q1.isEmpty()){
+                while(!q2.isEmpty()){
+                    top = q2.remove();
+                    if(q2.isEmpty()){
+                        break;
+                    }
+                    q1.add(top);
+                }
+            }else{
+                while(!q1.isEmpty()){
+                    top = q1.remove();
+                    if(q1.isEmpty()){
+                       break;
+                    }
+                    q2.add(top);
+                }
+            }
+            return top;  
+        }
+
+        public G peek(){
+            if(isEmpty()){
+                System.out.println("Stack is Empty !");
+                return null;
+            }
+            G top = null;
+            if(q1.isEmpty()){
+                while(!q2.isEmpty()){
+                    top = q2.remove();
+                    q1.add(top);
+                }
+            }else{
+                while(!q1.isEmpty()){
+                    top = q1.remove();
+                    q2.add(top);
+                }
+            }
+            return top;
+        }
+    }
+
+    public static void main(String args[]) {
+        stack<Integer> s = new stack<>();
+        s.push(1);
+        s.push(2);
+        s.push(3);
+        s.push(4);
+        System.out.println(s.pop());
+        System.out.println(s.peek());
+        s.push(7);
+        s.push(8);
+        while(!s.isEmpty()){
+            System.out.println(s.pop());
+        }
+    }
+}
