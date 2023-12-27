@@ -1,0 +1,274 @@
+import java.time.Period;
+
+import javax.security.auth.Subject;
+
+public class BackTracking {
+
+    public static void printArr(int arr[]) {
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+
+    // Back Tracking on Array : creat an array an asgin value of it's index & in
+    // backtracking step decreas value by 2.
+
+    public static void example(int arr[], int idx, int val) {
+        if (idx == arr.length) {
+            printArr(arr);
+            return;
+        }
+        arr[idx] = val;
+        example(arr, idx + 1, val + 1);
+        arr[idx] = arr[idx] - 2;
+    }
+
+    // Find subset : print all the subsets of a given string.
+    static int count = 0;
+
+    public static void subset(String str, String ans, int i) {
+        if (i == str.length()) {
+            count++;
+            if (ans == "") {
+                System.out.println("NULL");
+            } else {
+                System.out.println(ans);
+            }
+            return;
+        }
+
+        subset(str, ans + str.charAt(i), i + 1);
+        subset(str, ans, i + 1);
+    }
+
+    // Find permutations : find & print all permutation of a string.
+    public static void permutation(String str, String ans) {
+        if (str.length() == 0) {
+            count++;
+            System.out.println(ans);
+            return;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            char curr = str.charAt(i);
+            String newstr = str.substring(0, i) + str.substring(i + 1);
+            permutation(newstr, ans + curr);
+        }
+    }
+
+    /*
+     * N-Queens : place N Queens on an NxN chassbord soch that no 2 Queens can
+     * attack each other.
+     * 
+     * Approach : Q goes vertical
+     * horizontal(n queens -> n rows)
+     * diagonal
+     */
+
+    // first we understood the posible positions & then we add conditions for
+    // problems.
+    /*
+     * ---> Helper function for logic :
+     * 
+     * public static void nQueens(char board[][],int n){
+     * if(row == board.length){
+     * printBoard(board);
+     * return;
+     * }
+     * for(int i=0;i<board.length;i++){
+     * board[row][j] = 'Q';
+     * nQueen(board,row+1);
+     * board[row][j] = 'x'; //back-tracking step -> remove that Queen
+     * }
+     * }
+     */
+
+    public static void emptyBoard(char board[][]) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = 'x';
+            }
+        }
+    }
+
+    public static void printBoard(char board[][]) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public static boolean isSafe(char board[][], int row, int col) {
+        // vertical up
+        for (int i = row - 1; i >= 0; i--) {
+            if (board[i][col] == 'Q') {
+                return false;
+            }
+        }
+        // diagonal left up
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 'Q') {
+                return false;
+            }
+        }
+        // diagonal right up
+        for (int i = row - 1, j = col + 1; i >= 0 && j < board.length; i--, j++) {
+            if (board[i][j] == 'Q') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void nQueens(char board[][], int row) {
+        // base case
+        if (row == board.length) {
+            printBoard(board);
+            return;
+        }
+        // column loop
+        for (int j = 0; j < board.length; j++) {
+            if (isSafe(board, row, j)) {
+                board[row][j] = 'Q';
+                nQueens(board, row + 1);
+                board[row][j] = 'x';
+            }
+        }
+    }
+
+    // N-Queens print 1 soluction : check if problem can solve & print only 1
+    // soluction to NQueens problem.
+    public static boolean NQueens2(char board[][], int row) {
+        if (row == board.length) {
+            return true;
+        }
+        for (int j = 0; j < board.length; j++) {
+            if (isSafe(board, row, j)) {
+                board[row][j] = 'Q';
+                if (NQueens2(board, row + 1)) {
+                    return true;
+                }
+                board[row][j] = 'x';
+            }
+        }
+        return false;
+    }
+
+    /*
+     * Grid Ways : find the no. of ways to reach from (0,0) to (n-1,m-1) in a matrix
+     * grid.
+     * allowed moves 'rigth' or 'down'
+     * 
+     * Approach : cell(x,y)
+     * / \
+     * right down
+     * w1(x,y+1) w2(x+1,y)
+     * 
+     * total ways : w1 + w2
+     */
+
+    public static int gridWays(int i, int j, int n, int m) {
+        if (i == n - 1 && j == m - 1) {
+            return 1;
+        } else if (i == n || j == n) {
+            return 0;
+        }
+        int w1 = gridWays(i + 1, j, n, m);
+        int w2 = gridWays(i, j + 1, n, m);
+        return w1 + w2;
+    }
+
+    /*  This code has 0(2^n+m) T.C. so, now we use math & convert into linear time.
+        total ways = (n-1+m-1)! / (n-1)! (m-1)!
+     */
+    public static int fact(int n){
+        int arr[] = new int[n+1];
+        arr[0]= 1;
+        for(int i=1;i<=n;i++){
+            arr[i] = arr[i-1]*i;
+        }
+        return arr[n];
+    }
+
+    public static int gridWays2(int n,int m){
+        return fact(n+m-2)/(fact(n-1)*fact(m-1));
+    }
+    
+
+
+/*   
+    Sudoku : write a function to complete a Sudoku. (some elements not in same row & col & grid)
+ */
+
+public static boolean isSafeForSudoku(int sudoku[][], int row, int col, int digit){
+    //column
+    for(int i=0;i<=8;i++){
+        if(sudoku[i][col]==digit){
+            return false;
+        }
+    }
+    //row
+    for(int j=0;j<=8;j++){
+        if(sudoku[row][j]==digit){
+            return false;
+        }
+    }
+    //grid
+    int sr = (row/3)*3; // starting row
+    int sc = (col/3)*3; // starting col
+    //3x3 grid
+    for(int i=sr;i<sr+3;i++){
+        for(int j=sc;j<sc+3;j++){
+            if(sudoku[i][j]==digit){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+public static boolean sudokusol(int sudoku[][], int row, int col){
+    //base case
+    if(row==9){
+        return true;
+    }
+    //recurtion
+    int nextrow =row;
+    int nextcol = col+1;
+    if(col+1 == 9){
+        nextrow = row+1;
+        nextcol = 0;
+    }
+    if(sudoku[row][col] != 0){
+        return sudokusol(sudoku, nextrow, nextcol);
+    }
+    for(int digit=1; digit<=9; digit++){
+        if(isSafeForSudoku(sudoku, row, col, digit)){
+            sudoku[row][col] = digit;
+            if(sudokusol(sudoku, nextrow, nextcol)){
+                return true;
+            }
+            sudoku[row][col] = 0;
+        }
+    }
+    return false;
+}
+
+public static void printSudoku(int sudoku[][]){
+    for(int i=0;i<sudoku.length;i++){
+        for(int j=0;j<sudoku[0].length;j++){
+            System.out.print(sudoku[i][j]+" ");
+        }
+        System.out.println();
+    }
+}
+
+    public static void main(String args[]) {
+        int sudoku[][] = new int[9][9];
+        System.out.println(sudokusol(sudoku, 0, 0));
+        printSudoku(sudoku);
+    }
+}
