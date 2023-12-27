@@ -1,0 +1,231 @@
+class Recurtion{
+
+    /*
+     Recursion : it is a method of solving a computational problem were the soluction depends
+                 pn solution to smaller instances of the same problem.
+                 
+                 
+    * recursive function write in three steps : (i)base case
+                                                (ii)work 
+                                                (iii)inner call
+     */ 
+    // print the number n to 1
+    public static void printdec(int n){
+        if(n == 1){
+            System.out.println(n);
+            return;
+        }
+        System.out.println(n);
+        printdec(n-1);
+    }
+
+    // print the number in 1 to n
+    public static void increasing(int n){
+        if(n == 1){
+            System.out.println(n);
+            return;
+        }
+        increasing(n-1);
+        System.out.println(n);
+    }
+
+
+
+    //print factorial of number n
+    public static int fact(int n){
+        if(n == 1){
+            return 1;
+        }
+        return n * fact(n-1);
+    }
+
+
+
+
+    //print sum of first n natural numbers
+    public static int sumofn(int n){
+        if(n == 1){
+            return 1;
+        }
+        return n + sumofn(n-1);
+    }
+    
+
+
+    //print nth fibonachi number
+    public static int fib(int n){
+        if(n == 0 || n == 1){
+            return n;
+        }
+        return fib(n-1) + fib(n-2);
+    }
+
+
+
+    //chack array is sorted or not 
+    public static boolean issorted(int arr[],int i){
+        if(i == arr.length-1){
+            return true;
+        }
+        if(arr[i] > arr[i+1]){
+            return false;
+        }
+        return issorted(arr, i+1);
+    }
+
+
+
+    //write a function to find the first occurance of an element in an array
+    public static int firstocc(int arr[],int key,int i){
+        if(i == arr.length-1){
+            return -1;
+        }
+        if(arr[i] == key){
+            return i;
+        }
+        return firstocc(arr,key,i+1);
+    }
+
+
+
+
+    // last occurance 
+    public static int lastocc(int arr[],int key,int i){
+        if(i == arr.length-1){
+            return -1;
+        }
+        int isfound = lastocc(arr, key, i++);
+        if(isfound == -1 && arr[i] == key){
+            return i;
+        }
+        return isfound;
+    }
+
+
+
+    //print x^n
+    public static int pow(int x,int n){
+        if(n == 0){
+            return 1;
+        }
+        return x * pow(x, n-1);
+    }
+
+
+
+    //pow optimized way O(logn)
+    public static int opt_pow(int x,int n){
+        if(n == 0){
+            return 1;
+        }
+        int halfpow = opt_pow(x, n/2);
+        int halfpowsqr = halfpow * halfpow;
+        if(n % 2 != 0){
+            halfpowsqr = x * halfpowsqr;
+        }
+        return halfpowsqr;
+    }
+
+
+    /*
+     * Tiling Problem : given a "2 X N" board and tiles of size "2 x 1",  count the number of 
+       ways to tile the given board using the 2x1 tiles. (a tile can either be placed horizintal 
+       or vertical)
+
+    Approach : 
+             base case : if(n==0 || n==1) ways = 1
+
+             kaam :
+             choice  (i)vertical : fill = 2xn  & f(n-1) = 2*(n-1) so, vertical + 2*(n-1)
+                    (ii)horizpntal : f(n-2)=2*(n-2)  so, horizontal + 2*(n-2)
+
+             call inner function : total ways = f(n-1) + f(n-2)
+     */
+    public static int tileproblem(int n){
+        if(n==0 || n==1){
+            return 1;
+        }
+        //kaam
+        int fnm1 = tileproblem(n-1);
+        int fnm2 = tileproblem(n-2);
+
+        return fnm1 + fnm2;
+    }
+
+
+
+    /*remove duplicates in a string
+     Approach : base case : o to string.length()
+                kaam : char -> not present in map str -> str.append(char), otherwise not
+                        index++
+     */
+    public static void removedupli(String str,int idx,StringBuilder newstr,boolean map[]){
+        if(idx == str.length()){
+            System.out.println(newstr);
+            return;
+        }
+        char ch = str.charAt(idx);
+        if(map[ch-'a'] == true){//duplicate
+            removedupli(str, idx+1, newstr, map);
+        }else{
+            map[ch-'a'] = true;
+            removedupli(str, idx+1, newstr.append(ch), map);
+        }
+    }
+
+
+
+    /* Frind pairing problem : given n friends, each can remain single or can be paired with some 
+       another friend.Each friend can be paired only once.find out the total number of ways in 
+       which friends can remaing single or can be paired up.
+
+       Approach : 
+                 Base case : if n==1 || n==2  return n;
+
+                 kaam : choice : (i)single -> (n-1)
+                                 (ii)pair -> (n-1)(n-2)
+
+                total ways = f(n-1) + (n-1)*(n-2)
+     */
+
+     public static int friendsprob(int n){
+        if(n == 1 || n== 2){
+            return n;
+        }//kaam - choice
+        //single
+        int fnm1 = friendsprob(n-1);
+        //paired
+        int fnm2 = friendsprob(n-2);
+        int pairsway = (n-1) * fnm2;
+
+        return fnm1 + pairsway ;
+     }
+
+
+
+
+    /* Binary string problem : print all binary strings of size n without consecutive onces.(no repeated 1)
+    */
+     public static void printBinarystr(int n, int lastplace, String str){
+        if(n == 0){
+            System.out.println(str);
+            return;
+        }
+        //kaam
+        printBinarystr(n-1, 0 , str+"0");
+        if(lastplace == 0){
+            printBinarystr(n-1, 1 , str+"1");
+        }
+     }
+
+    public static void main(String args[]){
+        // boolean map[] = new boolean[26];
+        // String str = "";
+        // StringBuilder sb = new StringBuilder("");
+        // removedupli(string, 0, sb, map);
+        // System.out.println(friendsprob(4));
+
+        printBinarystr(5, 0, new String("") );
+    }
+
+}
