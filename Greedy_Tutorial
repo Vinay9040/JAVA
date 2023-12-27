@@ -1,0 +1,276 @@
+import java.lang.reflect.Array;
+import java.util.*;
+
+import javax.annotation.processing.SupportedSourceVersion;
+
+
+public class greedyB {
+    // Greedy Approach : Greedy Algorithm is the problem solving technique where we make the "locally optimum 
+    //                   choice at each stage" & hope to achieve a global optimum.
+
+    //  PROs                   CONs
+    //  *simple & easy         *lot of time,global 
+    //  *good enough TC         optimum is not achieved.
+
+
+    // Activity Selection : you are given n activities with thier start & end times. select the maximum number 
+    //                      of activites that can be perform by a single person, asssuming that a person can only 
+    //                      work on a single activity at a time. Activies are sorted according to end time.
+    // Approach : start[] = {1,3,0,5,8,5}   end[] = {2,4,6,7,9,3}
+    public static void actSelect(int start[],int end[]){ //0(n)
+        //end time base sort
+        int maxAct = 0;
+        ArrayList<Integer> ans = new ArrayList<>();
+        //add 1st activity
+        maxAct++;
+        ans.add(0);
+        int lastEnd = end[0];
+       
+        for(int i=1;i<end.length;i++){
+            if(start[i] >= lastEnd){
+                //activity selected
+                maxAct++;
+                ans.add(i);
+                lastEnd = end[i];
+            }
+        }
+        System.out.println("Max activitys : " + maxAct);
+        for(int i=0;i<ans.size();i++){
+            System.out.println("A"+ans.get(i));
+        }
+        System.out.println();
+    }
+    /* In this code ,if ending array is not sorted,then we create 2D array like,
+                int act[][] = new[start.length][3];
+                for(int i=0;i<start.length;i++){
+                    act[0][i] = i;
+                    act[1][i] = start[i];
+                    act[2][i] = end[i];
+                }
+
+    * then we use lamdafunction to sort 2D array.
+     here must be include : import java.util.Arrays;
+                            import java.util.Comparator;
+
+                Array.sort(act , Comparator.comparingDouble(o->o[2]));
+                it means sort by 2 index column 
+
+    
+    //in this case our code look like
+    public static void actSelect(int start[],int end[]){
+        int act[][] = new int[start.length][3];
+        for (int i=0; i < start.length; i++){
+            act[i][0] = i;
+            act[i][1] = start[i];
+            act[i][2] = end[i];
+        }
+        Arrays.sort(act , Comparator.comparingDouble(o->o[2]));
+
+        ArrayList<Integer> ans = new ArrayList<>();
+        int maxAct = 1;
+        ans.add(act[0][0]);
+        int lastEnd = act[0][2];
+        for(int i=1 ; i<end.length ; i++){
+            if(act[i][1] >= lastEnd){
+                maxAct++;
+                ans.add(act[i][0]);
+                lastEnd = act[i][2];
+            }
+        }
+        System.out.println("Max activitys : " + maxAct);
+        for(int i=0;i<ans.size();i++){
+            System.out.println("A"+ans.get(i));
+        }
+        System.out.println();
+    }
+    */
+
+    // Fractinal Knapsack(bag): given the weights & values of N items,put these items in a knapsack of 
+    //                          capacity W to get the mamimum total value in knapsack. 
+    // value[] = {60,100,120}  weight[] = {10,20,30}   C = 50
+    public static void fKnapsack(int val[], int weight[], int c){
+        float price[][] = new float[val.length][3];
+
+        for(int i=0 ; i<val.length ; i++){
+            price[i][0] = val[i];
+            price[i][1] = weight[i];
+            price[i][2] = (float)(val[i]/weight[i]);
+        }
+        Arrays.sort(price,Comparator.comparingDouble(o->o[2]));
+        
+        int knapsack = c;
+        float total = 0;
+        for(int i = price.length-1; i >= 0 ; i--){// OR int idx = price[]
+            if(knapsack >= price[i][1]){
+                knapsack -= price[i][1];
+                total += price[i][0];
+            }else if(knapsack > 0 && knapsack < price[i][1]) {
+                float temp = 1 - (float)((price[i][1] - knapsack) / price[i][1]);
+                total += price[i][0] * temp;
+                knapsack = 0;
+                break;
+            }
+        }
+        System.out.println("total profit : "+ total);
+    }
+
+
+
+    // Min absolute difference pair : given two arrays A & B of equal length n. pair each element of array A to 
+    //  element in array B,such that sum S of absolute differeces of all the pairs in minimum.
+    // Approach : sort both arrays in asending order so, we get desirebal answer.
+    public static void minAbsDiffPair(int arr1[],int arr2[]){
+        Arrays.sort(arr1);
+        Arrays.sort(arr2);
+        int minDiff = 0;
+        for(int i = 0;i<arr1.length;i++){
+            minDiff += Math.abs(arr1[i] - arr2[i]);
+        }
+        System.out.println("minDiff is : " + minDiff);
+    }
+
+
+    // Max length chain of pairs : you are given N pairs of numbers in every-pair, the first number is always 
+    // smaller than the second number. A pair(c,d) can come after pair(a,b) if B < c . find the longest chain 
+    // which can be formed from a givven set of pairs.
+    public static void maxLenofChain(int chain[][]){//0(nlogn)
+        Arrays.sort(chain,Comparator.comparingDouble(o->o[1]));
+        int chainLen = 1;
+        int chainEnd = chain[0][1];
+        for(int i=1;i<chain.length;i++){
+            if(chain[i][0] > chainEnd){
+                chainLen++;
+                chainEnd = chain[i][1];
+            }
+        }
+        System.out.println("max length chain of pairs : " + chainLen);
+    }
+    
+
+
+    //Indian Coin : we are given an infinity supply of denomination [1,2,5,10,20,50,100,500,2000] find the 
+    //              min no. of coinsnotes to make change for a value V.
+    public static void indianCoin(int rupees){
+        Integer notes[] = {1,2,5,10,20,50,100,200,500,2000};
+        Arrays.sort(notes , Comparator.reverseOrder());
+        
+        Queue<Integer> notuu = new ArrayDeque<>();
+        for(int i=0;i<notes.length;i++){
+            if(notes[i] <= rupees){
+                
+                while(notes[i] <= rupees){
+                    notuu.add(notes[i]);
+                    rupees -= notes[i];
+                }
+            }
+        }
+        System.out.println("you need "+ notuu.size()+ " notes/coins, those are as below :");
+        while(!notuu.isEmpty()){
+            System.out.print(notuu.remove() + " ");
+        }
+    }
+
+
+    // Job Sequencing problem : given an array of jobs where every job has a deadline & profit if the job is 
+    // finished single unit of time so, the minimum possible deadline for any job is 1. maximum the total 
+    // profix if any one job can be sheduled at a time.
+    static class Job{
+        int deadline;
+        int profit;
+        int id;
+        public Job(int i,int d,int p){
+            this.id = i;
+            this.deadline = d;
+            this.profit = p;
+        }
+    }
+
+    public static void jobseq(int jobInfo[][]){
+        ArrayList<Job> jobs = new ArrayList<>();
+        for(int i=0; i<jobInfo.length;i++){
+            jobs.add(new Job(i,jobInfo[i][0],jobInfo[i][1]));
+        }
+ 
+        Collections.sort(jobs,(obj1,obj2) -> obj2.profit-obj1.profit);//desending order
+
+        ArrayList<Integer> seq = new ArrayList<>();
+        int time = 0;
+        for(int i=0; i< jobs.size();i++){
+            Job curr = jobs.get(i);
+            if(curr.deadline > time){
+                seq.add(curr.id);
+                time++;
+            }
+        }
+        System.out.println("max jobs = "+ seq.size());
+        for(int i=0;i<seq.size();i++){
+            System.out.println(seq.get(i)+ " ");
+        }
+        System.out.println();
+    }
+
+
+
+    // Chocolate Problem : we are given a bar of chocolate compossed of MxN squrw pieces. one should break 
+    // the chocalate into single squares.Each break of a part of the chocolate is charged a cost expressed 
+    // by a positive integer. this cost does not depend on the size of the path that is bring broken but only 
+    // depends on the line.the break goes along lets us donate the costs of breaking along consecutive vertical 
+    // lines with X1,X2..X(n-1) & along horizontal lines with Y1,Y2..Y(n-1).
+    
+    //Approach : 1. arrenge all cuts in order of cost.
+    //           2.After each cut chocolate pieces increases so, done expensive cut first,then cheaper cuts.
+    //           3. cost of horizontal cuts-->hp*x  && cost of vertical cuts-->hp*y
+    public static void chocolateProblem(int n, int m, Integer costHor[],Integer costVer[]){// n = no. of hor. cuts
+        Arrays.sort(costHor, Collections.reverseOrder());
+        Arrays.sort(costVer, Collections.reverseOrder());
+        
+        int h=0,v=0;
+        int hp=0,vp=0;
+        int cost = 0;
+
+        while(h < costHor.length && v < costVer.length){
+            if(costVer[v] <= costHor[h]){
+                //horizontal cuts
+                cost += (costHor[h] * vp);
+                hp++;
+                h++;
+            }else{
+                //vertical cuts
+                cost += (costVer[v] * hp);
+                vp++;
+                v++;
+            }
+        }
+
+        while(h < costHor.length){
+            cost += (costHor[h] * vp);
+            hp++;
+            h++;
+        }
+        while(v < costVer.length){
+            cost += (costVer[v] * hp);
+            vp++;
+            v++;
+        }
+
+        System.out.println("minimum cost = "+ cost);
+    }
+
+
+
+
+
+
+
+
+    public static void main(String args[]){
+        // int c[][] = {{5,24},{39,60},{5,28},{27,40},{50,90}};
+        // maxLenofChain(c);
+        // indianCoin(2888);
+        // int jobs[][] = {{4,20},{1,10},{1,40},{1,30}};
+        // jobseq(jobs);
+        Integer cv[] = {2,1,3,1,4};
+        Integer ch[] = {4,1,2};
+        chocolateProblem(4, 6, ch, cv);
+    }           
+}
