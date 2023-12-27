@@ -1,0 +1,122 @@
+public class Bit_manuplication{
+    /* 
+    #Binary OR ( | )
+    #Binary AND ( & )
+    #Binary NOT ( ~ )
+    #Binary XOR ( ^ )
+    #Binary LeftShift ( << )
+    #Binary RightShift ( >> )
+    */ 
+
+    //Check the number is even or odd.
+    public static void odd_even(int n){
+        int Bitmask = 1;
+        if((n & Bitmask) == 0){
+            System.out.println("even");
+        }else{
+            System.out.println("odd");
+        }
+    }
+
+
+    //get ith bit
+    public static int getbit(int n,int i){
+        int bitmask = 1 << i;
+        if((n & bitmask) == 0){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+
+
+    //set ith bit
+    public static int setbit(int n, int i){
+        int Bitmask = 1 << i;
+        return n | Bitmask;
+    }
+
+
+    //clear ith bit
+    public static int clearithbit(int n, int i){
+        int Bitmask = ~(1<<i);
+        return n & Bitmask;
+    }
+
+
+    //update ith bit
+    public static int updateithBit(int n,int i,int newbit){
+        if(newbit == 0){
+            return clearithbit(n, i);
+        }else{
+            return setbit(n, i);
+        }
+    }
+
+    //               OR
+    // public static int updateithBit(int n,int i,int newbit){
+    //     n = clearithbit(n,i);
+    //     int Bitmask = newbit << i;
+    //     return n | Bitmask;
+    // }
+
+
+
+        //clear last i bits
+        public static int clearibits(int n,int i){
+            int Bitmask = (~0)<<i;
+            return n & Bitmask ;
+        }
+
+
+
+        //clear range of bits
+        public static int clearBits(int n, int i,int j){
+            int a =((~0)<<(j+1));
+            int b = (1<<i)-1;
+            int Bitmask = a | b;
+            return n & Bitmask;
+        }
+
+
+
+        //check if a number is a power of two or not
+        public static boolean ispowoftwo(int n){
+            return (n & (n-1)) == 0;
+        }
+
+
+
+        //count set-bits(1) in a number
+        public static int countsetbit(int n){
+            int count = 0;
+            while(n>0){
+                if((n&1) != 0){
+                    count++;
+                }
+                n = n>>1;
+            }
+            return count;
+        }
+
+
+
+        //fast exponetiation O(logn)
+        public static int fastexp(int a,int n){
+            int ans = 1;
+            while(n>0){
+                if((n&1) != 0){
+                    ans *= a;
+                }
+                a *= a;
+                n = n>>1;
+            }
+            return ans;
+        }
+
+
+
+    public static void main (String args[]){
+        System.out.println(fastexp(2,15));
+    }
+}
