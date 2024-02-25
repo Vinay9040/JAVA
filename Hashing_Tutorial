@@ -1,0 +1,404 @@
+// import java.util.HashMap;
+// import java.util.Set;
+import java.util.*;
+
+
+// Hashing : it is a process to change the form of data.
+// by hashing we can create two data structure. (i)map ,(ii)set
+// 1. Map : forther categarize : HashMap, LinkedHashMap, treeMap
+// 2. Set : forther categarize : HashSet, LinkedHashSet, treeSet
+
+// HashMap : in this data stucture data store the key & its related value. means pair of <Key,Value>
+// *charecter : every Key has unique.
+//              we can import inbuild hashmap by : import java.util.HashMap;
+
+// initilization : HashMap<Integer,String> hm = new HashMap<>();
+// operations : put(key,value), remove(key), get(key), contains(key), isEmpty(), size(), clear().
+
+
+class Hashing {
+    
+    // Iteration on HashMap : 
+    // Note : set is a DS use to store the keys of the hashmap.
+    // public static void tryhashmap(){
+    //     HashMap<String,Integer> hm = new HashMap<>();
+    //     hm.put("a", 10);
+    //     hm.put("b", 20);
+    //     hm.put("c", 30);
+    //     //itorate
+    //     Set<String> keys = hm.keySet(); // OR hm.entrySet();
+    //     System.out.println(keys);
+    //     // OR 
+    //     for (String k : keys) {
+    //         System.out.println("key = "+k+" , value = "+hm.get(k));
+    //     }
+    // }
+
+
+
+    // Implement HashMap : it is implemented by Array of LinkedList.
+    @SuppressWarnings("unchecked")
+    static class MyHashMap<K,V>{
+        private class Node{
+            K key;
+            V value;
+            public Node(K key, V value){
+                this.key = key;
+                this.value = value;
+            }
+        }
+        private int n = 0; // no. of nodes
+        private int N; // no. of buckets 
+        private LinkedList<Node>[] buckets;
+
+
+        
+        public MyHashMap(){
+            this.N = 4;
+            this.buckets = new LinkedList[N];
+            for(int i=0; i<N ; i++){
+                this.buckets[i] = new LinkedList<>();
+            }
+        }
+
+        private int hashFunction(K key){
+            int hc = key.hashCode();
+            return Math.abs(hc) % N;
+        }
+
+        private int searchInll(K key,int bi){
+            LinkedList<Node> ll = buckets[bi];
+            // int di = 0;  i is the di
+            for(int i=0;i < ll.size();i++){
+                Node node = ll.get(i);
+                if(node.key.equals(key)){ // node.key.equals(key)
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public void put(K key,V value){
+            int bi = hashFunction(key);
+            int di = searchInll(key, bi);
+            if(di != -1){
+                Node node = buckets[bi].get(di);
+                node.value = value;
+            }else{
+                buckets[bi].add(new Node(key, value));
+                n++;
+            }
+            double lamda = (double) n/N;
+            if(lamda > 2.0){
+                reHash();
+            }
+        }
+
+    // Note : in the worst case every node are set at same bi so, time complexity become 0(n).so we need rehash.
+        private void reHash(){
+            LinkedList<Node>[] oldbucket = buckets;
+            N *= 2;
+            buckets = new LinkedList[N];
+            
+            for(int i=0;i < N; i++){
+                buckets[i] = new LinkedList<>();
+            }
+            //nodes --> add in buckets
+            for (LinkedList<Node> oldBucket : oldbucket) {
+                for (Node node : oldBucket) {
+                    put(node.key, node.value);
+                }
+            }
+        }
+
+        public boolean containsKey(K key){
+            int bi = hashFunction(key);
+            int di = searchInll(key, bi);
+            return di != -1;
+        }
+
+        public V get(K key){
+            int bi = hashFunction(key);
+            int di = searchInll(key, bi);
+            if(di != -1){
+                Node node = buckets[bi].get(di);
+                return node.value;
+            }else{
+                return null;
+            }
+        }
+
+        public V remove(K key){
+            int bi = hashFunction(key);
+            int di = searchInll(key, bi);
+            if(di != -1){
+                Node node = buckets[bi].remove(di);
+                n--;
+                return node.value;
+            }else{
+                return null;
+            }
+        }
+
+        public ArrayList<K> keySet(){
+            ArrayList<K> keys = new ArrayList<>();
+            for(int i=0;i<N;i++){
+                LinkedList<Node> ll = buckets[i];
+                for(Node node : ll){
+                    keys.add(node.key);
+                }
+            }
+            return keys;
+        }
+         
+    }
+
+
+    // LinkedHashMap : keys are insertion order
+    // initilize : LinkedHashMap<K,V> lhm = new LinkedHashMap<>();
+    // it is implemented by Doubly LinkedList.
+
+    // TreeMap : keys are in sorted order.
+    // implemented by red-black tree.
+    // Because of sorting the TC is become 0(logn).
+    // initilize : TreeMap<K,V> tm = new TreeMap<>();
+
+
+
+    // Majority Elements : given an integer array of size n, find all elements that appear more than [n/3] times.
+    public static void majorityEle(int arr[]){
+        // aaya me banave HM vapru, to oli sortcut line nay hale
+        HashMap<Integer,Integer> hm = new HashMap<>();
+
+        for (int i : arr) {
+            // below code replace by :
+            // hm.put(i,hm.getOrDefault(i,0)+1);
+            if(hm.containsKey(i)){
+                hm.put(i, hm.get(i)+1);
+            }else{
+                hm.put(i, 1);
+            }
+        }
+        int n = arr.length;
+        // ArrayList<Integer> keys = hm.keySet();
+        for (Integer key : hm.keySet()){ 
+            if(hm.get(key) > n/3){
+                System.out.println(key);
+            }
+        }
+
+    }
+
+
+
+    // Valid Anagram : give two strings s & t  return true if t is an anagram of s and false otherwise.
+    public static boolean isAnagram(String s, String t){
+        if(s.length() != t.length()){
+            return false;
+        }
+        HashMap<Character,Integer> hm = new HashMap<>();
+        for (char ch : s.toCharArray()) {// aanathi foreach loop vapri sakay
+            if(hm.containsKey(ch)){
+                hm.put(ch, hm.get(ch)+1);
+            }else{
+                hm.put(ch, 1);
+            }
+        }
+        for(char c : t.toCharArray()){ 
+            if(hm.containsKey(c)){
+                hm.put(c, hm.get(c)-1);
+                if(hm.get(c) < 0){
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        } 
+        return true;
+    }
+
+
+
+    // HashSet : set of keys.
+    // Implemented by HashMap ,same for LinkedHashSet imple. by LinkedHashMap & TreeSet I. by TreeMap.
+    // Properties : no duplicates, unorder, NULL is allowed
+    // declaration : HashSet<K> hs = new HashSet<>();
+
+    // Itorate on HashSet :
+    // @ (i)using Itorator Object           @(ii)using foreach loop
+    // Itorator i = set.itorator();             for(String i : hs){
+    // while(i.hasNext()){                          System.out.println(i);
+    //    System.out.println(i.next());         }
+    // }
+
+
+    // LinkedHashSet : ordered using DLL
+    // declaration : LinkedHashSet<K> lhs = new LinkedHashSet<>();
+
+
+    // TreeSet : sorted in asc order & NULL values are not allow
+    // TreeSet --implemented by--> TreeMap --implemented by --> redBlackTree
+    // declaretion : TreeSet<String> ts = new TreeSet<>(); 
+
+
+
+    // Count Distinct elements : 
+    public static void distEle(int arr[]){
+        HashSet<Integer> hs = new HashSet<>();
+        for (Integer i : arr) {
+            hs.add(i);            
+        }
+        System.out.println(hs.size());
+    }
+
+
+
+    // Union & Intersecation of 2 arrays :
+    public static void union(int arr1[], int arr2[]){
+        HashSet<Integer> set = new HashSet<>();
+        for (Integer i : arr1) {
+            set.add(i);
+        }
+        for (Integer i : arr2) {
+            set.add(i);
+        }
+        System.out.println("Union is : "+ set.size()+ " , those are :");
+        @SuppressWarnings("rawtypes")
+        Iterator i = set.iterator();
+
+        while(i.hasNext()){
+            System.out.print(i.next()+ " ");
+        }
+        System.out.println();
+    }
+
+    public static void intersecation(int arr1[], int arr2[]){
+        HashSet<Integer> hs = new HashSet<>();
+        for (int  i : arr1) {
+            hs.add(i);
+        }
+        HashSet<Integer> s = new HashSet<>();
+        for (int i : arr2) {
+            if(hs.contains(i)){
+                s.add(i);
+            }
+        }
+        System.out.println("The intersection is : "+s.size()+", those are :");
+        @SuppressWarnings("rawtypes")
+        Iterator i = s.iterator();
+        while(i.hasNext()){
+            System.out.print(i.next()+" ");
+        }
+        System.out.println();
+    }
+
+
+
+    // Find journey from ticket :
+    // Approach : start point has 'FROM',but not 'TO'
+    public static String getStart(HashMap<String,String> hm){
+        HashSet<String> s1= new HashSet<>();
+        for (String s : hm.keySet()) {
+            s1.add(hm.get(s));
+        }
+        for (String st : hm.keySet()) {
+            if(!s1.contains(st)){
+                return st;
+            }
+        }
+        return null;
+    }
+
+
+
+
+    // Largest subarray with 0 sum :
+    // Approach : sum[i+1,j] = sun[0,i] - sum[0.j]
+    //                     0 = sun[0,i] - sum[0.j]
+    //              sum[0.j] = sun[0,i] 
+    // and length = j - i;
+    public static void largestSubArrWith0Sum(int arr[]){
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        int sum = 0, len = 0;
+
+        for(int j=0;j < arr.length; j++){
+            sum += arr[j];
+            if(hm.containsKey(sum)){
+                len = Math.max(len , j - hm.get(sum) );
+            }else{
+                hm.put(sum, j);
+            }
+        }
+        System.out.println("Largest subArray with 0 sum => "+len);
+    }
+
+
+
+    // Subarray sum equal to K :
+    // Approach : sum[0,j] - sum[i-1,j] = sum[i,j]
+    //                     sum[o,j] - K = sum[0,i]
+    // we are store in the HashMap is <sum,count>
+    public static void subArrSumEqualToK(int []arr, int k){
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        int sum = 0, ans = 0;
+        hm.put(0, 1);
+
+        for(int j=0; j < arr.length; j++){
+            sum += arr[j];
+            if(hm.containsKey(sum - k)){
+                ans += hm.get(sum - k);
+            }
+            hm.put(sum, hm.getOrDefault(sum,0)+1);
+        }
+        System.out.println("Target count is => "+ans);
+    }
+
+    
+    public static void main(String args[]){
+        // MyHashMap<Integer,Integer> h = new MyHashMap<>();
+        
+        // for(int i=0;i<10;i++){
+        //     h.put(i,i*10);
+        // }
+        // System.out.println(h.remove(0));
+        // System.out.println(h.containsKey(9));
+
+        // ArrayList<Integer> keys = h.keySet();
+        // for (Integer key : keys) {
+        //     System.out.println("key = " + key + " , value = " + h.get(key));
+        // }
+
+        // majorityEle(a);
+        // System.out.println(isAnagram("abcdefgabc", "cbcdefgaba"));
+        // distEle(a);
+
+        // int arr1[] = {1,2,3,4,5,6};
+        // int arr2[] = {4,5,6,7,8};
+        // union(arr1, arr2);
+        // intersecation(arr1, arr2);
+        
+        // HashMap<String,String> hm = new HashMap<>();
+        // hm.put("chenni", "bengaluru");
+        // hm.put("mumbai", "delhi");
+        // hm.put("goa", "chenni");
+        // hm.put("delhi", "goa");
+
+        // String temp = getStart(hm);
+        // if(temp == null){
+        //     System.out.println("Wrong input !");
+        // }else{
+        //     System.out.print(temp);
+        //     for (String s : hm.keySet()) {
+        //         System.out.print(" -> "+hm.get(temp));
+        //         temp = hm.get(temp);
+        //     }
+        //     System.out.println();
+        // }
+        
+        // int a[] = {15,-2,2,-8,1,-7,10,23};
+        // largestSubArrWith0Sum(a);
+
+        // int a[] = {10,2,-2,-20,10};
+        // subArrSumEqualToK(a, -10);
+    }
+}
