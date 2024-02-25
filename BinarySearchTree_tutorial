@@ -1,0 +1,369 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+// import binaryTree.Node;
+public class BinarySearchTree {
+    // Binary Search Tree : 
+    // This are same binary tree with some extra charecteritics : Leftsubtree Node < root
+    //                                                            rightsub tree Node > root
+    //                                                            left & right sub tree also BST with no duplicate
+
+    // NOTE : Inorder traversal of BST gives a Sorted sequence.
+
+    static class Node{
+        int data;
+        Node left,right;
+        public Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+
+    // Search in BST :
+    public static boolean search(Node root,int key){
+        if(root == null){
+            return false;
+        }
+        if(root.data == key){
+            return true;
+        }
+        if(root.data < key){
+            return search(root.right, key);
+        }else{
+            return search(root.left, key);
+        }
+    }
+
+
+
+
+    // Insert Node :
+    public static Node insert(Node root,int val){
+        if(root == null){
+            root = new Node(val);
+            return root;
+        }
+        if(root.data > val){
+            root.left = insert(root.left, val);
+        }else{
+            root.right = insert(root.right, val);
+        }
+        return root;
+    }
+
+
+
+
+    // Delete Node : 
+    // Approach : 1.search Node  2.Delete According case : 
+    //           cases : (i) Node with no child : delete node & return null to parent 
+    //                  (ii) Node with one child : delete node & replace with child Node
+    //                  (iii) Node with two child : replace value with inorder successor & delete the node for i.s.
+    // Inorder succer --> left most node in right subtree.
+    public static Node findInorderSucc(Node root){
+        while(root.left != null){
+            return root.left;
+        }
+        return root;
+    }
+
+    public static Node delete(Node root,int val){
+        if(root.data < val){
+            root.right = delete(root.right, val);
+        }
+        else if(root.data > val){
+            root.left = delete(root.left, val);
+        }
+        else{ //case 1 : leaf node
+            if(root.left == null && root.right == null){
+                return null;
+            }
+            //case 2 : single child
+            if(root.left == null){
+                return root.right;
+            }else if(root.right == null){
+                return root.left;
+            }
+            //case 3 : both child
+            Node IS = findInorderSucc(root.right);
+            root.data = IS.data;
+            root.right = delete(root.right, IS.data);
+        }
+        return root;
+    }
+
+
+    
+    // print in range :
+    public static void printInRange(Node root,int k1, int k2){
+        if(root == null){
+            return;
+        }
+        if(root.data >= k1 && root.data <= k2){
+            printInRange(root.left, k1, k2);
+            System.out.print(root.data + " ");
+            printInRange(root.right, k1, k2);
+        }
+        else if(root.data < k1){
+            printInRange(root.left, k1, k2);
+        }else{
+            printInRange(root.right, k1, k2);
+        }
+    }
+
+
+
+
+    // Print all paths root to leafs :
+    public static void printPath(ArrayList<Integer> path){
+        for(int i=0;i<path.size();i++){
+            System.out.print(path.get(i)+ "->");
+        }
+        System.out.println();
+    }
+    public static void printRtoL(Node root, ArrayList<Integer> path){
+        if(root == null){
+            return ;
+        }
+        path.add(root.data);
+        if(root.left == null && root.right == null){
+            printPath(path);
+        }
+        printRtoL(root.left, path);
+        printRtoL(root.right,path);
+        path.remove(path.size()-1);
+    }
+
+
+    // Valid BST : 
+    // Approach 1 : convert bst to inorder-traversal , if it is sorted then it is valid BST.
+    // Approach 2 : check if max value in left subtree < node &&
+    //                       min value in right subtree > node  (this is used in this code)
+    public static boolean isValidBST(Node root, Node min, Node max){
+        if(root == null){
+            return true;
+        }
+        if(min != null && root.data <= min.data){
+            return false;
+        }
+        else if(max != null && root.data >= max.data){
+            return false;
+        }
+        return isValidBST(root.left, min, root) && isValidBST(root.right, root, max);
+    }
+
+
+    // Mirror BST :
+    public static Node creatMirror(Node root){
+        if(root == null){
+            return null;
+        }
+        Node leftMirror = creatMirror(root.left);
+        Node rigthMirror = creatMirror(root.right);
+        root.left = rigthMirror;
+        root.right = leftMirror;
+        return root;
+    }
+
+
+
+    // Sorted array to balance BST (with minimun height)
+    public static Node creatBST(int arr[], int si, int ei){
+        if(si > ei){
+            return null;
+        }
+        int mid = (si+ei)/2;
+        Node root = new Node(arr[mid]);
+        root.left = creatBST(arr, si, mid-1);
+        root.right = creatBST(arr, mid+1, ei);
+
+        return root;
+    }
+
+
+
+
+    // Convert BST to Balance BST :
+    public static Node balanceBST(Node root){
+        ArrayList<Integer> al = new ArrayList<>();
+        getInorder(root,al);
+        Collections.sort(al);
+        root = creatBST2(al,0,al.size()-1);
+        return root;
+    }
+
+    public static void getInorder(Node root, ArrayList<Integer> al){
+        if(root == null){
+            return;
+        }
+        getInorder(root.left, al);
+        al.add(root.data);
+        getInorder(root.right, al);
+    }
+
+    public static Node creatBST2(ArrayList<Integer> al,int si,int ei){
+        if(si > ei){
+            return null;
+        }
+        int mid = (si+ei)/2;
+        Node root = new Node(al.get(mid));
+        root.left = creatBST2(al,si,mid-1);
+        root.right = creatBST2(al,mid+1,ei);
+        return root;
+    }
+
+
+
+    // Size of largest BST in BT
+    static class Info{
+        boolean isBST;
+        int size,min,max;
+
+        public Info(boolean isBST, int size, int min, int max){
+            this.isBST = isBST;
+            this.size = size;
+            this.min = min;
+            this.max = max;
+        }
+    }
+    public static int maxBST = 0;
+
+    public static Info largestBST(Node root){
+        if(root == null){
+            return new Info(true,0,Integer.MAX_VALUE,Integer.MIN_VALUE);
+        }
+        Info leftInfo = largestBST(root.left);
+        Info rigthInfo = largestBST(root.right);
+        int size = leftInfo.size + rigthInfo.size + 1;
+
+        int min = Math.min(root.data,Math.min(leftInfo.min,rigthInfo.min));
+        int max = Math.max(root.data,Math.max(leftInfo.max,rigthInfo.max));
+
+        if(root.data <= leftInfo.max || root.data >= rigthInfo.min){
+            return new Info(false, size, min, max);
+        }
+        if(leftInfo.isBST && rigthInfo.isBST){
+            maxBST = Math.max(maxBST,size);
+            return new Info(true,size,min,max);
+        }
+        return new Info(false,size,min,max);
+    }
+
+
+
+    // Merge 2 BSTs :
+    // Approach : BST1 & BST2 ---> inorder
+    //            merge them in sorted seq
+    //            sorted seq ---> balance BST
+    public static Node mergeBSTs(Node root1, Node root2){
+        ArrayList<Integer> arr1 = new ArrayList<>();
+        getInorder(root1, arr1);
+
+        ArrayList<Integer> arr2 = new ArrayList<>();
+        getInorder(root2, arr2);
+
+        ArrayList<Integer> answer = merger(arr1,arr2);
+
+        return creatBST2(answer, 0, answer.size()-1);
+    }
+
+    public static ArrayList<Integer> merger(ArrayList<Integer> arr1,ArrayList<Integer> arr2){
+        ArrayList<Integer> ans = new ArrayList<>();
+        int i = 0, j = 0;
+        while(i < arr1.size() && j < arr2.size()){
+            if(arr1.get(i) < arr2.get(j)){
+                ans.add(arr1.get(i));
+                i++;
+            }else{
+                ans.add(arr2.get(j));
+                j++;
+            }
+        }
+
+        while(i < arr1.size()){
+            ans.add(arr1.get(i));
+            i++;
+        }
+        while(j < arr2.size()){
+            ans.add(arr2.get(j));
+            j++;
+        }
+
+        return ans;
+    }
+
+    public static void inorder(Node root){
+        if(root == null){
+            return;
+        }
+        inorder(root.left);
+        System.out.print(root.data + " ");
+        inorder(root.right);
+    }
+
+
+    // AVL trees : self balancing BST
+    // the time complaxity is 0(h), where h is height of tree.(if h=n it called shew tree)
+    // Balance factor = height of left sub-tree - height of right sub-tree
+    // Balance factor (BF) is always {-1,0,1} for balance BST or AVL tree.
+
+    //There various cases to solve the unbalance tree to balance tree :
+    // ==> LL ,LR ,RR , RL .
+
+
+    // Creat AVL tree : (i)insert in BST, (ii)if BF unbalance -> find case -> rotate accordingly.
+
+    
+
+ 
+    public static void main(String args[]){
+        // Node root = new Node(3);
+        // root.left = new Node(2);
+        // root.left.left = new Node(1);
+        // root.right = new Node(5);
+        // root.right.left= new Node(4);
+        @SuppressWarnings("unused")
+        Node root = insert(null, 6);
+        // insert(root, 3);
+        // insert(root, 5);
+        // insert(root, 1);
+        // insert(root, 8);
+        // insert(root, 7);
+        // insert(root, 9);
+        // inorder(root);
+        // delete(root, root.data);
+        // System.out.println(root.data);
+        // System.out.println(delete(root, 7).data);
+        // inorder(root);
+        // System.out.println(search(root, 4));
+        // printInRange(root, 3, 8);
+        // ArrayList<Integer> path = new ArrayList<>();
+        // printRtoL(root,path);
+        // System.out.println(isValidBST(root, null, null));
+        //
+        // inorder(root);
+        // System.out.println();
+        // creatMirror(root);
+        // inorder(root);
+
+        // int arr[] = {1,2,3,4,5,6,7,8,9,10,11};
+        // Node head = creatBST(arr, 0, 10);
+        // System.out.println(head.right.data);
+        // inorder(head);
+
+        //use in balanceBST (line 189)
+        // root.left = new Node(7);
+        // root.left.left = new Node(9);
+        // root.right = new Node(1);
+        // root.right.right = new Node(2);
+        // root.right.right.right = new Node(4);
+        // inorder(root);
+        // System.out.println();
+        // root = balanceBST(root);
+        // inorder(root);
+        // largestBST(root);
+        // System.out.println(maxBST);
+    }
+}
