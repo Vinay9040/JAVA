@@ -1,0 +1,289 @@
+import java.util.PriorityQueue;
+import java.util.ArrayList;
+
+
+// Priority queues :it is a kind of queue which has sorted based on priority.
+
+// initilize by : PriorityQueue<Integer> pq = new PriorityQueue<>();
+// Functions : add(val),remove() } 0(logn) ; peek() 0(1)
+
+// simple exampe :
+// public static void main(String args[]){
+//     PriorityQueue<Integer> pq = new PriorityQueue<>(_here_); // eq..1
+//     for(int i=0;i<5;i++){
+//         pq.add(i);
+//     }
+//     while(!pq.isEmpty()){
+//         System.out.println(pq.remove());
+//     }
+// }
+
+// NOTE : if we want to revese the order of the (desc order) PriorityQueue we add "Comparator.reverseOrder()"
+//        in the eq..1
+
+public class Heap {
+    static class student implements Comparable<student>{
+        String name;
+        int rank;
+        public student(String name,int rank){
+            this.name = name;
+            this.rank = rank;
+        }
+        @Override
+        public int compareTo(student s2){
+            return this.rank - s2.rank;
+        }
+    }
+
+    // public static void main(String args[]){
+    //     PriorityQueue<student> pq = new PriorityQueue<>();
+    //     pq.add(new student("rohit", 4));
+    //     pq.add(new student("vinay",50));
+    //     pq.add(new student("yash",5));
+
+    //     while(!pq.isEmpty()){
+    //         System.out.println(pq.peek().name+"  "+pq.peek().rank);
+    //         pq.remove();
+    //     }
+    // }
+
+
+    // Heap : it is a special tree-based data structure in which the tree is a complete binary tree.
+
+    // heap--visualize as-->binary tree  &  heap--implement as-->arraylist
+
+    // heap order property : *children >= parent(minheap)   *children <= parent(maxheap)
+    // heap is not implemented as node class. because in the add operation the time complexity become 0(n).
+    // so,we only visulize as tree to show the parent-child relationship.
+
+    ArrayList<Integer> arr = new ArrayList<>();
+    public void add(int data){
+        arr.add(data);
+        int x =arr.size() - 1; // child idx
+        int par = (x-1)/2; // parent idx
+
+        while(arr.get(x) < arr.get(par)){
+            //swap
+            int temp = arr.get(x);
+            arr.set(x, arr.get(par));
+            arr.set(par, temp);
+            x = par;
+            par = (x-1)/2 ;
+        }
+    }
+
+
+    // Delete in heap : 
+    // Approach :(i) 1st and last element swap, (ii)remove last idx, (iii)fix heap by heapify //0(logn)
+    public int remove(){
+        int data = arr.get(0);
+        //swap
+        int temp = arr.get(arr.size()-1);
+        arr.set(arr.size()-1, arr.get(0));
+        arr.set(arr.get(0), temp);
+        //step 2
+        arr.remove(arr.size()-1);
+        //step 3
+        heapify(0);
+        return data;
+    }
+
+    private void heapify(int i){
+        int left = 2*i + 1;
+        int right = 2*i +2;
+        int minIdx = i;
+
+        if(left < arr.size()-1 && arr.get(minIdx) > arr.get(left)){
+            minIdx = left;
+        }
+        if(right < arr.size()-1 && arr.get(minIdx) > arr.get(right)){
+            minIdx = right;
+        }
+        //swap
+        if(minIdx != i){
+            int temp = arr.get(i);
+            arr.set(i, arr.get(minIdx));
+            arr.set(minIdx, temp);
+            heapify(minIdx);
+        }
+    }
+
+
+
+    // Heap Sort : 0(nlogn) : asc-->maxheap : desc -->minheap
+    // here shown code for max-heap sort
+    public static void heapSort(int[] arr){
+        //step 1 : build max-heap
+        int n = arr.length;
+        for(int i = n/2; i >= 0; i--){
+            heapify(arr, i, n);
+        }
+        //step 2 : push largest at end
+        for(int i=n-1;i>0;i--){
+            //swap
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+            heapify(arr, 0, i);
+        }
+    }
+
+    public static void heapify(int[] arr, int i,int size){
+        int left = 2*i + 1;
+        int right = 2*i + 2;
+        int maxIdx = i;
+        if(left < size && arr[left] > arr[maxIdx]){
+            maxIdx = left;
+        }
+        if(right < size && arr[right] > arr[maxIdx]){
+            maxIdx = right;
+        }
+        //swap
+        if(maxIdx != i){
+            int temp = arr[i];
+            arr[i] = arr[maxIdx];
+            arr[maxIdx] = temp;
+            heapify(arr,maxIdx,size);
+        }
+    }
+
+
+
+    // Nearby N cars : we are given n points in a 2D plane which are locations of N cars. if we are at
+    //                 the origion print the nearest K cars.
+    static class point implements Comparable<point>{
+        int x,y;
+        int distsq,idx;
+        public point(int x, int y, int dis, int idx){
+            this.x = x;
+            this.y = y;
+            this.distsq = dis;
+            this.idx = idx;
+        }
+        @Override
+        public int compareTo(point p2){
+            return this.distsq - p2.distsq;
+        }
+    }
+    public static void getNearKCars(int [][]pts,int k){
+        PriorityQueue<point> pq = new PriorityQueue<>();
+        for(int i=0; i<pts.length; i++){
+            int distsq = pts[i][0]*pts[i][0]+pts[i][1]*pts[i][1];
+            pq.add(new point(pts[i][0], pts[i][1], distsq, i));
+        }
+        // nearest k cars
+        for(int i=0; i<k ;i++){
+            System.out.println("C"+pq.remove().idx);
+        }
+    }
+
+
+
+    //Connected N Ropes: given are n ropes of different length,the task is to connect these ropes into one rope
+    //                   with minimum cost,such that the cost to connect two ropes is equal to sum of their length
+    // NOTE : this sum can't done by greedy approach because can't get exact ans.
+    public static void connectNRopes(int arr[]){
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for(int i=0;i<arr.length;i++){
+            pq.add(arr[i]);
+        }
+        int cost = 0;
+        while(pq.size() > 1){
+            int min1 = pq.remove();
+            int min2 = pq.remove();
+            cost += min1 + min2;
+            pq.add(min1 + min2);
+        }
+        System.out.println("cost is : "+cost);
+    }
+
+
+
+    // Weakest Soldier : we are given MxN binary matrix of 1's(soldier) & 0's(civikians). the soldier are 
+    //                   positioned in front of the civilian that is all the 1's will appear tp the left
+    //                   of all the 0's in each row. a row i is weaker than a raw j if one of the following
+    //                   is true.
+    // * the number of soliders in row i is less than the number of solider is row j.
+    // * both row have the same number of solider and i<j. find the k weakes rows.
+    static class Row implements Comparable<Row>{
+        int soldier,idx;
+        public Row(int soldier,int idx){
+            this.soldier = soldier;
+            this.idx =idx;
+        }
+        @Override
+        public int compareTo(Row r2){
+            if(this.soldier == r2.soldier){
+                return this.idx - r2.idx;
+            }
+            else{
+                return this.soldier - r2.soldier;
+            }
+        }
+    }
+    public static void weakesSoldier(int arr[][], int k){
+        PriorityQueue<Row> pq = new PriorityQueue<>();
+        for(int i=0; i<arr.length;i++){
+            int count = 0;
+            for(int j=0; j<arr[0].length;j++){
+                count += arr[i][j] == 1 ? 1 : 0;
+            }
+            pq.add(new Row(count, i));
+        }
+        for(int i=0;i<k;i++){
+            System.out.println("R"+pq.remove().idx);
+        }
+    }
+
+
+
+    // Sliding window Maximum : 0(nlogk) maximum of all subarrays if size k
+    static class Pair implements Comparable<Pair>{
+        int val,idx;
+        public Pair(int val , int idx){
+            this.val = val;
+            this.idx = idx;
+        }
+        @Override
+        public int compareTo(Pair p2){
+            // return this.val - p2.val for assending
+            //descending
+            return p2.val - this.val;
+        }
+    }
+
+    public static void slidingWindow(int arr[], int k){
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        int ans[] = new int[arr.length-k+1];
+        //1st window
+        for(int i=0;i<k;i++){
+            pq.add(new Pair(arr[i], i));
+        }
+        ans[0] = pq.remove().val;
+        for(int i=k;i<arr.length;i++){
+            while(pq.size() > 0 && pq.peek().idx <= (i-k)){
+                pq.remove();
+            }
+            pq.add(new Pair(arr[i], i));
+            ans[i-k+1] = pq.peek().val;
+        }
+        for(int i=0;i<ans.length;i++){
+            System.out.print(ans[i]+" ");
+        }
+    }
+
+    public static void main(String args[]){
+        // int pts[][] = {{3,4},{5,-1},{-2,4}};
+        // int k = 2;
+        // getNearKCars(pts, k);
+
+        // int ropes[] = {4,3,2,6};
+        // connectNRopes(ropes);
+
+        // int arr[][] = {{1,0,0,0},{1,1,1,1},{1,0,0,0},{1,0,0,0}};
+        // weakesSoldier(arr, 2);
+
+        int arr[] = {1,3,-1,-3,5,3,6,7};
+        slidingWindow(arr, 3);
+    }
+}
