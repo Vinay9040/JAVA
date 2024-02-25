@@ -1,0 +1,217 @@
+class Trie{
+    static class Node{
+        Node[] child;
+        boolean eow;
+        public Node(){
+            child = new Node[26]; 
+            for (int i = 0; i < 26; i++) {
+                child[i] = null;
+            }
+            eow = false;
+        }
+    }
+
+    public static Node root = new Node();
+
+    public static void insertWord(String s){// 0(l) , l = length of string
+        Node curr = root;
+        for(int i=0; i<s.length();i++){
+            char ch = s.charAt(i);
+            int idx = ch - 'a';
+            if(curr.child[idx] == null){
+                curr.child[idx] = new Node();
+            }
+            curr = curr.child[idx];
+        }
+        curr.eow = true;
+    }
+
+
+
+    public static boolean searchTheWord(String s){
+        Node curr = root;
+        for(int i=0;i<s.length();i++){
+            int idx = s.charAt(i) - 'a';
+            if(curr.child[idx] == null){
+                return false;
+            }
+            curr = curr.child[idx];
+        }
+        return curr.eow == true;
+    }
+
+
+    
+    // Word Break Problem : given an input string and a dictionary words, findout if the input string can be broken
+    //                      into a space-separated seqance of dictianal words.
+    public static boolean wordBreak(String key){
+        if(key.length() == 0){
+            return true;
+        }
+        for(int i=1;i<=key.length();i++){
+            if(searchTheWord(key.substring(0,i)) && wordBreak(key.substring(i))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    // Prefix problem : find shortest unique prefix for every word in a given list.
+    //EX. arr[] = {"zebra","dog","duck","dove"} ==>  answer= {"z","dog","du","dov"}
+    static class Nodep{
+        Nodep child[];
+        boolean eow;
+        int freq;
+        public Nodep(){
+            child = new Nodep[26];
+            for(int i=0;i<26;i++){
+                child[i] = null;
+            }
+            freq = 1;
+        }
+    }
+
+    public static Nodep rootp = new Nodep();
+    public static void newInsert(String word){
+        Nodep curr = rootp;
+        for(int i=0;i<word.length();i++){
+            int idx = word.charAt(i) - 'a';
+            if(curr.child[idx] == null){
+                curr.child[idx] = new Nodep();
+            }else{
+                curr.child[idx].freq++;
+            }
+            curr = curr.child[idx];
+        }
+        curr.eow = true;
+    }
+
+    public static String uniqueprefix(String word){
+        StringBuilder s = new StringBuilder("");
+        Nodep curr = rootp;
+        for(int i=0;i<word.length();i++){
+            int idx = word.charAt(i) - 'a';
+            s.append(word.charAt(i));
+            if(curr.child[idx].freq == 1){
+                return s.toString();
+            }else{
+                curr = curr.child[idx];
+            } 
+        }
+        return s.toString();
+    }
+
+
+
+
+
+
+
+    // Start with problem : create a function boolean startwith(String prefix) for a trie. return true if there is 
+    //                      a previously inserted string word that has the prefix.
+    public static boolean startWith(String prefix){
+        Node curr = root;
+        for(int i=0;i<prefix.length();i++){
+            int idx = prefix.charAt(i) - 'a';
+            if(curr.child[idx] == null){
+                return false;
+            }
+            curr = curr.child[idx];
+        }
+        return true;
+    }
+
+
+
+
+    // Count unique strings : given a string of length n of lowercase alphabat charecter. we need to count total number
+    //                        of disinet substring of this string.
+    // Approach :(i)find all substring
+    //           (ii)create a trie from suffix
+    //           (iii)count node of trie(answer)
+    public static int uniqueString(String str){
+        for(int i=0;i<str.length();i++){ //step 1
+            String suffix = str.substring(i);
+            insertWord(suffix); //step 2 (function already exist)
+        }
+        //step 3
+        return countNode(root);
+    }
+
+    public static int countNode(Node root){
+        if(root == null){
+            return 0;
+        }
+        int count = 0;
+        for(int i=0;i<26;i++){
+            if(root.child[i] != null){
+                count += countNode(root.child[i]);
+            }
+        }
+        return count+1;
+    }
+
+
+
+
+    // Largest word with all prefixes : find the longest string in word such that every prefix of it is also in words
+    // EX. words = ["a","banana","app","appl","ap","apply","apple"]; answer = apple
+    // Approach :  so, here we find longest word with all nodes eow arer true.
+    // cases : (i) longest length
+    //         (ii)equal length then  lexicographically smaller
+    //         (iii) empty string
+
+    public static String ans = "";
+
+    public static void largestWord(Node root,StringBuilder temp){
+        if(root == null){
+            return;
+        }
+        for(int i=0;i<26;i++){
+            if(root.child[i] != null && root.child[i].eow == true){
+                temp.append((char)(i+'a'));
+                if(temp.length() > ans.length()){
+                    ans = temp.toString();
+                }
+                largestWord(root.child[i], temp);
+                temp.deleteCharAt(temp.length()-1);
+            }
+        }
+    }
+
+    public static String getLongestWord(String []words){
+        for(int i=0;i<words.length;i++){
+            insertWord(words[i]);
+        }
+        largestWord(root, new StringBuilder(""));
+        return ans;
+    }
+
+
+
+    public static void main(String args[]){
+        // String s[] = {"i","like","sam","samsung","mobile","ice"};
+        // for (String st : s) {
+        //     insertWord(st);
+        // }
+        // // System.out.println(searchTheWord(""));
+        // System.out.println(wordBreak("ilikesamsung"));
+        // System.out.println(uniqueString("ababa"));
+
+        // String words[] = {"a","banana","app","appl","ap","apply","apple"};
+        // System.out.println(getLongestWord(words));
+
+
+        String word[] = {"zebra","dog","duck","dove"};
+        for(int i=0;i<word.length;i++){
+            newInsert(word[i]);
+        }
+        for(int i=0;i<word.length;i++){
+            System.out.println(uniqueprefix(word[i]));
+        }
+        
+    }
+}
